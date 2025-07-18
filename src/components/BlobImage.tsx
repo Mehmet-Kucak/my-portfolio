@@ -41,7 +41,7 @@ export default function Blob({
   useEffect(() => void setMounted(true), []);
 
   if (!mounted) {
-    return <img src={src} alt={alt} className="w-full h-auto" />;
+    return;
   }
 
   return (
@@ -50,12 +50,12 @@ export default function Blob({
       xmlns="http://www.w3.org/2000/svg"
       role="img"
       aria-label={alt}
-      className="w-full h-auto max-w-md mx-auto"
+      className="w-full h-auto max-w-md"
       whileHover={{
-        scale: 1.025,
+        scale: 1.05,
         transition: { duration: 0.2 },
       }}
-      whileTap={{ scale: 1, transition: { duration: 0.2 } }}
+      whileTap={{ scale: 0.95, transition: { duration: 0.2 } }}
     >
       <defs>
         <filter id="blob-shadow" x="-50%" y="-50%" width="200%" height="200%">

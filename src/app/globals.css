@@ -1,11 +1,32 @@
 @import "tailwindcss";
 
-* {
-  margin: 0;
-  padding: 0;
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background-color: #000;
   color: #fff;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+.snap-container {
+  height: 100vh;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.snap-container::-webkit-scrollbar {
+  display: none;
+}
+
+.snap-section {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  height: 100vh;
 }

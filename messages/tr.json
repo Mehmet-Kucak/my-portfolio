@@ -1,0 +1,10 @@
+{
+  "HomePage": {
+    "hero": {
+      "title": "Merhaba, ben Mehmet",
+      "subTitle": "",
+      "roles": "Full-Stack Geliştirici|Yazılım Mühendisi|Web Tasarımcısı|Problem Çözücü|AI/ML Meraklısı|Teknoloji Bağımlısı",
+      "description": "Mehmet Kucak, etkileyici web deneyimleri tasarlamaya odaklanmış bir full-stack geliştiriciyim. React, Next.js ve TypeScript teknolojileriyle estetik ve yüksek performanslı uygulamalar üretiyorum. Haydi birlikte muhteşem projeler geliştirelim."
+    }
+  }
+}

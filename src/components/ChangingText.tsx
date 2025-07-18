@@ -2,23 +2,16 @@
 
 import { useState, useEffect, useRef } from "react";
 
-const texts = [
-  "Full-Stack Developer",
-  "Software Engineer",
-  "Web Designer",
-  "Problem Solver",
-  "AI/ML Explorer",
-  "Tech Enthusiast",
-];
 const TYPING_SPEED = 100;
 const DELETING_SPEED = 75;
 const PAUSE_AFTER = 1000;
 
-export default function ConsoleText() {
+export default function ConsoleText({ children }: { children: string }) {
   const [display, setDisplay] = useState("");
   const [idx, setIdx] = useState(0);
   const [isDeleting, setDeleting] = useState(false);
   const timeoutRef = useRef<number>(0);
+  const texts = children.split("|");
 
   useEffect(() => {
     const full = texts[idx];
@@ -41,7 +34,7 @@ export default function ConsoleText() {
     }
 
     return () => clearTimeout(timeoutRef.current);
-  }, [display, isDeleting, idx]);
+  }, [display, isDeleting, idx, texts]);
 
   return (
     <div className="inline-block">

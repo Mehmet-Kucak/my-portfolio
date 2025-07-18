@@ -1,0 +1,10 @@
+{
+  "HomePage": {
+    "hero":{
+      "title": "Hi, I'm Mehmet",
+      "subTitle": "I'm a ",
+      "roles" : "Full-Stack Developer|Software Engineer|Web Designer|Problem Solver|AI/ML Enthusiast|Tech Addict",
+      "description": "I'm Mehmet Kucak, a full-stack developer passionate about creating exceptional web experiences. I work with React, Next.js, and Node.js to build applications that are both beautiful and functional. Let's build something great together."
+    }
+  }
+}

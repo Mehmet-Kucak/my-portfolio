@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useMotionValue, useMotionTemplate } from "framer-motion";
-import { FC, useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 
 export default function AnimatedBackground() {
   const containerRef = useRef<HTMLDivElement>(null);

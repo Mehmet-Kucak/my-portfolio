@@ -2,23 +2,28 @@ import BlobImage from "@/components/BlobImage";
 import AnimatedBackground from "@/components/AnimatedBackground";
 import ChangingText from "@/components/ChangingText";
 import ScrollDownIndicator from "@/components/ScrollDown";
+import LanguageSelector from "@/components/LangSelector";
+import { useTranslations } from "next-intl";
 
 export default function Home() {
+  const t = useTranslations("HomePage");
+
   return (
     <main className="snap-container">
       <section id="home" className="snap-section w-full relative">
+        <div className="absolute top-4 right-4 z-50">
+          <LanguageSelector />
+        </div>
         <AnimatedBackground />
         <div className="relative z-10 flex items-center justify-between h-full w-full px-20">
           <div>
-            <h1 className="text-6xl text-white">Hi, I'm Mehmet!</h1>
+            <h1 className="text-6xl text-white">{t("hero.title")}</h1>
             <h1 className="text-4xl text-white">
-              I'm a <ChangingText />
+              {t("hero.subTitle")}
+              <ChangingText>{t("hero.roles")}</ChangingText>
             </h1>
             <p className="mt-4 text-gray-300 max-w-xl">
-              I'm Mehmet Kucak, a full-stack developer passionate about creating
-              exceptional web experiences. I work with React, Next.js, and
-              Node.js to build applications that are both beautiful and
-              functional. Let's build something great together.
+              {t("hero.description")}
             </p>
           </div>
           <BlobImage src="/photo.webp" alt="Photo" />

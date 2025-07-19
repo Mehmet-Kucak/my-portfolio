@@ -17,12 +17,14 @@ export default function Home() {
         <AnimatedBackground />
         <div className="relative z-10 flex items-center justify-between h-full w-full px-20">
           <div>
-            <h1 className="text-6xl text-white">{t("hero.title")}</h1>
-            <h1 className="text-4xl text-white">
+            <h1 className="text-6xl font-extrabold text-white">
+              {t("hero.title")}
+            </h1>
+            <h1 className="text-4xl font-bold text-white">
               {t("hero.subTitle")}
               <ChangingText>{t("hero.roles")}</ChangingText>
             </h1>
-            <p className="mt-4 text-gray-300 max-w-xl">
+            <p className="mt-4 text-xl text-gray-300 max-w-xl">
               {t("hero.description")}
             </p>
           </div>

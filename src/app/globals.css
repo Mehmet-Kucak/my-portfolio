@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "LeagueSpartan";
+  src: url("/fonts/LeagueSpartan.woff2") format("woff2-variations");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -10,6 +18,7 @@ body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
+  font-family: "LeagueSpartan", sans-serif;
 }
 
 .snap-container {

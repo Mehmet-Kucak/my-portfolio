@@ -41,7 +41,7 @@ export default function LanguageSelector() {
         onMouseLeave={() => iconRef.current?.stopAnimation()}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
-        className="flex items-center w-24 gap-2 px-4 py-2 text-white hover:bg-white/20 rounded-lg focus:none"
+        className="flex items-center justify-center w-24 gap-2 px-4 py-2 text-2xl text-white hover:bg-white/20 rounded-lg focus:none"
       >
         <LanguagesIcon ref={iconRef} size={20} />
         <span>{lang.toUpperCase()}</span>

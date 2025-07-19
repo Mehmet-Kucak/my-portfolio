@@ -24,12 +24,12 @@ export default function AnimatedBackground() {
   const highlightGrid = `
     repeating-linear-gradient(
       0deg,
-      rgba(255,255,255,0.1) 0, rgba(255,255,255,0.1) 2px,
+      rgba(150,150,255,0.25) 0, rgba(150,150,255,0.25) 2px,
       transparent 2px, transparent 50px
     ),
     repeating-linear-gradient(
       90deg,
-      rgba(255,255,255,0.1) 0, rgba(255,255,255,0.1) 2px,
+      rgba(150,150,255,0.25) 0, rgba(150,150,255,0.25) 2px,
       transparent 2px, transparent 50px
     )
   `;
@@ -38,7 +38,7 @@ export default function AnimatedBackground() {
     radial-gradient(
       circle at ${mouseX}px ${mouseY}px,
       black 0%,
-      transparent 200px
+      transparent 150px
     )
   `;
 

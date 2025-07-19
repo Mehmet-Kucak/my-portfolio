@@ -29,7 +29,7 @@ export default function ScrollDownIndicator({
         duration: 2,
         repeat: Infinity,
         ease: "easeInOut",
-        delay: 3,
+        delay: 5,
         times: [0, 0.2, 0.8, 1],
       }}
       className="absolute bottom-10 left-1/2 -translate-x-1/2 cursor-pointer"

@@ -69,6 +69,7 @@ export default function Blob({
         </filter>
         <clipPath id="blob-clip">
           <motion.path
+            d={shapes[0]}
             fill="none"
             stroke="none"
             animate={{ d: shapes }}

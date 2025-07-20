@@ -16,13 +16,6 @@ const shapes: string[] = [
   "M240.2 -193.6C291.2 -127.6 298.7 -28.9 277.6 63.2C256.4 155.3 206.8 240.7 135.4 271.3C64 301.9 -29 277.7 -107 235.1C-185 192.6 -248 131.8 -276.5 50.6C-305.1 -30.6 -299.1 -132.2 -247.3 -198.4C-195.5 -264.5 -97.7 -295.3 -1.6 -294C94.6 -292.8 189.2 -259.6 240.2 -193.6",
 ];
 
-const transition = {
-  duration: shapes.length,
-  repeat: Infinity,
-  repeatType: "loop" as const,
-  ease: "linear" as const,
-};
-
 interface BlobProps {
   src: string;
   alt: string;
@@ -30,18 +23,31 @@ interface BlobProps {
     color: string;
     width: number;
   };
+  priority?: boolean;
 }
 
 export default function Blob({
   src,
   alt,
   outline = { color: "#FFFFFF", width: 10 },
+  priority = false,
 }: BlobProps) {
   const [mounted, setMounted] = useState(false);
-  useEffect(() => void setMounted(true), []);
+  const [imageLoaded, setImageLoaded] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+
+    // Preload the image for faster rendering
+    if (priority) {
+      const img = new Image();
+      img.onload = () => setImageLoaded(true);
+      img.src = src;
+    }
+  }, [src, priority]);
 
   if (!mounted) {
-    return;
+    return null;
   }
 
   return (
@@ -69,11 +75,16 @@ export default function Blob({
         </filter>
         <clipPath id="blob-clip">
           <motion.path
-            d={shapes[0]}
+            initial={{ d: shapes[0] }}
+            animate={{ d: shapes }}
+            transition={{
+              duration: shapes.length,
+              repeat: Infinity,
+              repeatType: "loop",
+              ease: "linear",
+            }}
             fill="none"
             stroke="none"
-            animate={{ d: shapes }}
-            transition={transition}
           />
         </clipPath>
       </defs>
@@ -86,17 +97,23 @@ export default function Blob({
         height={700}
         preserveAspectRatio="xMidYMid slice"
         clipPath="url(#blob-clip)"
+        style={{ imageRendering: "crisp-edges" }}
       />
 
       <motion.path
-        d={shapes[0]}
+        initial={{ d: shapes[0] }}
+        animate={{ d: shapes }}
+        transition={{
+          duration: shapes.length,
+          repeat: Infinity,
+          repeatType: "loop",
+          ease: "linear",
+        }}
         fill="none"
         stroke={outline.color}
         strokeWidth={outline.width}
         strokeLinejoin="round"
         strokeLinecap="round"
-        animate={{ d: shapes }}
-        transition={transition}
       />
     </motion.svg>
   );

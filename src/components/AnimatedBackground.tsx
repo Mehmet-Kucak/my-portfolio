@@ -1,9 +1,10 @@
 "use client";
 
 import { motion, useMotionValue, useMotionTemplate } from "framer-motion";
-import { useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useReducer, useCallback } from "react";
+import Image from "next/image";
 
-export default function AnimatedBackground() {
+export function AnimatedGridBg() {
   const containerRef = useRef<HTMLDivElement>(null);
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
@@ -24,12 +25,12 @@ export default function AnimatedBackground() {
   const highlightGrid = `
     repeating-linear-gradient(
       0deg,
-      rgba(150,150,255,0.25) 0, rgba(150,150,255,0.25) 2px,
+      rgba(255,255,255,0.15) 0, rgba(255,255,255,0.15) 2px,
       transparent 2px, transparent 50px
     ),
     repeating-linear-gradient(
       90deg,
-      rgba(150,150,255,0.25) 0, rgba(150,150,255,0.25) 2px,
+      rgba(255,255,255,0.15) 0, rgba(255,255,255,0.15) 2px,
       transparent 2px, transparent 50px
     )
   `;
@@ -73,7 +74,7 @@ export default function AnimatedBackground() {
   }, [mouseX, mouseY]);
 
   return (
-    <div ref={containerRef} className="absolute inset-0">
+    <div ref={containerRef} className="absolute inset-0 -z-50">
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
@@ -105,6 +106,379 @@ export default function AnimatedBackground() {
           }}
         />
       </div>
+    </div>
+  );
+}
+
+export function AnimatedGradientBg() {
+  return (
+    <motion.div
+      className="absolute inset-0 -z-50"
+      style={{
+        background:
+          "linear-gradient(45deg, #000000, #010101, #111111, #121212)",
+        backgroundSize: "400% 400%",
+      }}
+      animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
+      transition={{
+        duration: 20,
+        ease: "easeInOut",
+        repeat: Infinity,
+      }}
+    />
+  );
+}
+
+interface FloatingIcon {
+  id: number;
+  iconPath: string;
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  size: number;
+  opacity: number;
+  rotationSpeed: number;
+  rotation: number;
+}
+
+interface AnimatedIconBgProps {
+  iconType: string;
+  iconCount?: number;
+  minDistance?: number;
+  speed?: number;
+}
+
+// Icon configuration - maps icon types to their SVG filenames
+const ICON_SETS: Record<string, string[]> = {
+  section1: [
+    "binary.svg",
+    "braces.svg",
+    "bug.svg",
+    "database.svg",
+    "file-code.svg",
+    "layers.svg",
+    "rocket.svg",
+    "sparkles.svg",
+    "square-terminal.svg",
+    "graduation-cap.svg",
+    "sun.svg",
+    "student.svg",
+    "spiral.svg",
+    "read-cv-logo.svg",
+    "planet.svg",
+    "moon.svg",
+    "lightbulb.svg",
+  ],
+  section2: [
+    "css.svg",
+    "firebase.svg",
+    "git.svg",
+    "googlecloud.svg",
+    "html5.svg",
+    "javascript.svg",
+    "nodedotjs.svg",
+    "postgresql.svg",
+    "python.svg",
+    "react.svg",
+    "supabase.svg",
+    "typescript.svg",
+    "vercel.svg",
+  ],
+};
+
+function generateOptimizedPositions(
+  width: number,
+  height: number,
+  iconCount: number,
+  minDistance: number
+): { x: number; y: number }[] {
+  const positions: { x: number; y: number }[] = [];
+  const gridSize = minDistance;
+  const cols = Math.floor(width / gridSize);
+  const rows = Math.floor(height / gridSize);
+
+  // Create a grid of available positions
+  const availablePositions: { x: number; y: number }[] = [];
+  for (let row = 0; row < rows; row++) {
+    for (let col = 0; col < cols; col++) {
+      availablePositions.push({
+        x: col * gridSize + Math.random() * (gridSize * 0.6),
+        y: row * gridSize + Math.random() * (gridSize * 0.6),
+      });
+    }
+  }
+
+  // Shuffle and take the first iconCount positions
+  for (let i = availablePositions.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [availablePositions[i], availablePositions[j]] = [
+      availablePositions[j],
+      availablePositions[i],
+    ];
+  }
+
+  return availablePositions.slice(
+    0,
+    Math.min(iconCount, availablePositions.length)
+  );
+}
+
+// Optimized icon loading hook with parallel loading and preloading
+function useIconPaths(iconType: string) {
+  const [availableIcons, setAvailableIcons] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [preloadedImages, setPreloadedImages] = useState<
+    Map<string, HTMLImageElement>
+  >(new Map());
+
+  useEffect(() => {
+    async function loadAndPreloadIcons() {
+      setIsLoading(true);
+      const iconSet = ICON_SETS[iconType] || [];
+
+      // Create all promises in parallel instead of sequential loading
+      const iconPromises = iconSet.map(async (iconFile) => {
+        const iconPath = `/icons/${iconType}/${iconFile}`;
+
+        try {
+          // Create and preload the image
+          const img = new window.Image();
+
+          return new Promise<{ path: string; img: HTMLImageElement } | null>(
+            (resolve) => {
+              img.onload = () => resolve({ path: iconPath, img });
+              img.onerror = () => {
+                console.warn(`Icon not found: ${iconPath}`);
+                resolve(null);
+              };
+              // Start loading immediately
+              img.src = iconPath;
+            }
+          );
+        } catch (error) {
+          console.warn(`Failed to load icon: ${iconPath}`);
+          return null;
+        }
+      });
+
+      // Wait for all icons to load in parallel
+      const results = await Promise.all(iconPromises);
+
+      // Filter successful loads and store preloaded images
+      const validResults = results.filter(
+        (result): result is { path: string; img: HTMLImageElement } =>
+          result !== null
+      );
+      const validPaths = validResults.map((result) => result.path);
+      const imageMap = new Map(
+        validResults.map((result) => [result.path, result.img])
+      );
+
+      setAvailableIcons(validPaths);
+      setPreloadedImages(imageMap);
+      setIsLoading(false);
+    }
+
+    if (iconType) {
+      loadAndPreloadIcons();
+    }
+  }, [iconType]);
+
+  return { availableIcons, isLoading, preloadedImages };
+}
+
+export function AnimatedIconBg({
+  iconType,
+  iconCount = 50,
+  minDistance = 120,
+  speed = 0.1,
+}: AnimatedIconBgProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const animationRef = useRef<number>(null);
+  const lastTimeRef = useRef<number>(0);
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+  const iconsRef = useRef<FloatingIcon[]>([]);
+  const [, forceUpdate] = useReducer((x) => x + 1, 0);
+  const [isClient, setIsClient] = useState(false);
+
+  const { availableIcons, isLoading, preloadedImages } = useIconPaths(iconType);
+
+  // Throttled force update for smooth 60fps
+  const throttledUpdate = useCallback(() => {
+    forceUpdate();
+  }, []);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  // Generate icons with optimized spacing
+  useEffect(() => {
+    if (
+      isClient &&
+      dimensions.width > 0 &&
+      dimensions.height > 0 &&
+      availableIcons.length > 0 &&
+      !isLoading
+    ) {
+      const adaptiveIconCount = Math.min(
+        iconCount,
+        Math.floor((dimensions.width * dimensions.height) / 8000)
+      );
+
+      // Use optimized grid-based positioning
+      const positions = generateOptimizedPositions(
+        dimensions.width,
+        dimensions.height,
+        adaptiveIconCount,
+        minDistance
+      );
+
+      iconsRef.current = positions.map((pos, i) => ({
+        id: i,
+        iconPath: availableIcons[i % availableIcons.length],
+        x: pos.x,
+        y: pos.y,
+        vx: (Math.random() - 0.5) * speed,
+        vy: (Math.random() - 0.5) * speed,
+        size: 25 + (i % 3) * 8,
+        opacity: 0.15 + (i % 4) * 0.01,
+        rotationSpeed: ((i % 5) - 2) * 0.05,
+        rotation: 0,
+      }));
+
+      forceUpdate();
+    }
+  }, [
+    isClient,
+    dimensions.width,
+    dimensions.height,
+    availableIcons,
+    isLoading,
+    iconCount,
+    minDistance,
+    speed,
+  ]);
+
+  // Optimized dimension tracking with debouncing
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+
+    const updateDimensions = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        if (containerRef.current) {
+          const { width, height } =
+            containerRef.current.getBoundingClientRect();
+          setDimensions((prev) => {
+            if (
+              Math.abs(prev.width - width) > 50 ||
+              Math.abs(prev.height - height) > 50
+            ) {
+              return { width, height };
+            }
+            return prev;
+          });
+        }
+      }, 150);
+    };
+
+    updateDimensions();
+    window.addEventListener("resize", updateDimensions);
+    return () => {
+      window.removeEventListener("resize", updateDimensions);
+      clearTimeout(timeoutId);
+    };
+  }, []);
+
+  // High-performance animation loop
+  useEffect(() => {
+    if (!isClient || iconsRef.current.length === 0) return;
+
+    let frameCount = 0;
+    const targetFPS = 60;
+    const frameInterval = 1000 / targetFPS;
+
+    const animate = (currentTime: number) => {
+      const deltaTime = currentTime - lastTimeRef.current;
+
+      if (deltaTime >= frameInterval) {
+        frameCount++;
+
+        const speedMultiplier = Math.min(deltaTime * 0.06, 1);
+
+        iconsRef.current = iconsRef.current.map((icon) => {
+          let newX = icon.x + icon.vx * speedMultiplier;
+          let newY = icon.y + icon.vy * speedMultiplier;
+          let newVx = icon.vx;
+          let newVy = icon.vy;
+
+          if (newX <= 0 || newX >= dimensions.width - icon.size) {
+            newVx = -newVx;
+            newX = Math.max(0, Math.min(dimensions.width - icon.size, newX));
+          }
+          if (newY <= 0 || newY >= dimensions.height - icon.size) {
+            newVy = -newVy;
+            newY = Math.max(0, Math.min(dimensions.height - icon.size, newY));
+          }
+
+          return {
+            ...icon,
+            x: newX,
+            y: newY,
+            vx: newVx,
+            vy: newVy,
+            rotation: icon.rotation + icon.rotationSpeed * speedMultiplier,
+          };
+        });
+
+        throttledUpdate();
+        lastTimeRef.current = currentTime;
+      }
+
+      animationRef.current = requestAnimationFrame(animate);
+    };
+
+    animationRef.current = requestAnimationFrame(animate);
+
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [isClient, dimensions.width, dimensions.height, throttledUpdate]);
+
+  if (!isClient || isLoading || availableIcons.length === 0) {
+    return null;
+  }
+
+  return (
+    <div ref={containerRef} className="absolute inset-0 -z-10 overflow-hidden">
+      {iconsRef.current.map((iconData) => (
+        <div
+          key={iconData.id}
+          className="absolute pointer-events-none"
+          style={{
+            transform: `translate(${iconData.x}px, ${iconData.y}px) rotate(${iconData.rotation}deg)`,
+            width: iconData.size,
+            height: iconData.size,
+            opacity: iconData.opacity,
+            willChange: "transform",
+          }}
+        >
+          <Image
+            src={iconData.iconPath}
+            alt="Floating icon"
+            width={iconData.size}
+            height={iconData.size}
+            className="w-full h-full object-contain filter brightness-0 invert opacity-70"
+            loading="eager" // Changed from lazy to eager
+            unoptimized
+            priority={true} // Add priority for faster loading
+          />
+        </div>
+      ))}
     </div>
   );
 }

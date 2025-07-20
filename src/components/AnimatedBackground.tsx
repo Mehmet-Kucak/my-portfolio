@@ -197,7 +197,6 @@ function generateOptimizedPositions(
   const cols = Math.floor(width / gridSize);
   const rows = Math.floor(height / gridSize);
 
-  // Create a grid of available positions
   const availablePositions: { x: number; y: number }[] = [];
   for (let row = 0; row < rows; row++) {
     for (let col = 0; col < cols; col++) {
@@ -223,68 +222,20 @@ function generateOptimizedPositions(
   );
 }
 
-// Optimized icon loading hook with parallel loading and preloading
 function useIconPaths(iconType: string) {
   const [availableIcons, setAvailableIcons] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [preloadedImages, setPreloadedImages] = useState<
-    Map<string, HTMLImageElement>
-  >(new Map());
 
   useEffect(() => {
-    async function loadAndPreloadIcons() {
-      setIsLoading(true);
-      const iconSet = ICON_SETS[iconType] || [];
-
-      // Create all promises in parallel instead of sequential loading
-      const iconPromises = iconSet.map(async (iconFile) => {
-        const iconPath = `/icons/${iconType}/${iconFile}`;
-
-        try {
-          // Create and preload the image
-          const img = new window.Image();
-
-          return new Promise<{ path: string; img: HTMLImageElement } | null>(
-            (resolve) => {
-              img.onload = () => resolve({ path: iconPath, img });
-              img.onerror = () => {
-                console.warn(`Icon not found: ${iconPath}`);
-                resolve(null);
-              };
-              // Start loading immediately
-              img.src = iconPath;
-            }
-          );
-        } catch (error) {
-          console.warn(`Failed to load icon: ${iconPath}. Error:${error}`);
-          return null;
-        }
-      });
-
-      // Wait for all icons to load in parallel
-      const results = await Promise.all(iconPromises);
-
-      // Filter successful loads and store preloaded images
-      const validResults = results.filter(
-        (result): result is { path: string; img: HTMLImageElement } =>
-          result !== null
-      );
-      const validPaths = validResults.map((result) => result.path);
-      const imageMap = new Map(
-        validResults.map((result) => [result.path, result.img])
-      );
-
-      setAvailableIcons(validPaths);
-      setPreloadedImages(imageMap);
-      setIsLoading(false);
-    }
-
-    if (iconType) {
-      loadAndPreloadIcons();
-    }
+    const iconSet = ICON_SETS[iconType] || [];
+    const iconPaths = iconSet.map(
+      (iconFile) => `/icons/${iconType}/${iconFile}`
+    );
+    setAvailableIcons(iconPaths);
+    setIsLoading(false);
   }, [iconType]);
 
-  return { availableIcons, isLoading, preloadedImages };
+  return { availableIcons, isLoading };
 }
 
 export function AnimatedIconBg({
@@ -303,7 +254,6 @@ export function AnimatedIconBg({
 
   const { availableIcons, isLoading } = useIconPaths(iconType);
 
-  // Throttled force update for smooth 60fps
   const throttledUpdate = useCallback(() => {
     forceUpdate();
   }, []);
@@ -312,7 +262,6 @@ export function AnimatedIconBg({
     setIsClient(true);
   }, []);
 
-  // Generate icons with optimized spacing
   useEffect(() => {
     if (
       isClient &&
@@ -326,7 +275,6 @@ export function AnimatedIconBg({
         Math.floor((dimensions.width * dimensions.height) / 8000)
       );
 
-      // Use optimized grid-based positioning
       const positions = generateOptimizedPositions(
         dimensions.width,
         dimensions.height,
@@ -360,7 +308,6 @@ export function AnimatedIconBg({
     speed,
   ]);
 
-  // Optimized dimension tracking with debouncing
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
 
@@ -391,7 +338,6 @@ export function AnimatedIconBg({
     };
   }, []);
 
-  // High-performance animation loop
   useEffect(() => {
     if (!isClient || iconsRef.current.length === 0) return;
 
@@ -469,9 +415,9 @@ export function AnimatedIconBg({
             width={iconData.size}
             height={iconData.size}
             className="w-full h-full object-contain filter brightness-0 invert opacity-70"
-            loading="eager" // Changed from lazy to eager
+            loading="eager"
             unoptimized
-            priority={true} // Add priority for faster loading
+            priority={true}
           />
         </div>
       ))}

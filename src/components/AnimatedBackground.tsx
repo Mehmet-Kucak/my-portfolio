@@ -193,7 +193,6 @@ function generateOptimizedPositions(
   iconCount: number,
   minDistance: number
 ): { x: number; y: number }[] {
-  const positions: { x: number; y: number }[] = [];
   const gridSize = minDistance;
   const cols = Math.floor(width / gridSize);
   const rows = Math.floor(height / gridSize);
@@ -257,7 +256,7 @@ function useIconPaths(iconType: string) {
             }
           );
         } catch (error) {
-          console.warn(`Failed to load icon: ${iconPath}`);
+          console.warn(`Failed to load icon: ${iconPath}. Error:${error}`);
           return null;
         }
       });
@@ -302,7 +301,7 @@ export function AnimatedIconBg({
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
   const [isClient, setIsClient] = useState(false);
 
-  const { availableIcons, isLoading, preloadedImages } = useIconPaths(iconType);
+  const { availableIcons, isLoading } = useIconPaths(iconType);
 
   // Throttled force update for smooth 60fps
   const throttledUpdate = useCallback(() => {
@@ -396,7 +395,6 @@ export function AnimatedIconBg({
   useEffect(() => {
     if (!isClient || iconsRef.current.length === 0) return;
 
-    let frameCount = 0;
     const targetFPS = 60;
     const frameInterval = 1000 / targetFPS;
 
@@ -404,8 +402,6 @@ export function AnimatedIconBg({
       const deltaTime = currentTime - lastTimeRef.current;
 
       if (deltaTime >= frameInterval) {
-        frameCount++;
-
         const speedMultiplier = Math.min(deltaTime * 0.06, 1);
 
         iconsRef.current = iconsRef.current.map((icon) => {

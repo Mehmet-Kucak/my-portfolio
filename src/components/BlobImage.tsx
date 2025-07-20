@@ -33,15 +33,12 @@ export default function Blob({
   priority = false,
 }: BlobProps) {
   const [mounted, setMounted] = useState(false);
-  const [imageLoaded, setImageLoaded] = useState(false);
 
   useEffect(() => {
     setMounted(true);
 
-    // Preload the image for faster rendering
     if (priority) {
       const img = new Image();
-      img.onload = () => setImageLoaded(true);
       img.src = src;
     }
   }, [src, priority]);

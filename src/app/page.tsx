@@ -4,7 +4,6 @@ import ScrollDownIndicator from "@/components/ScrollDown";
 import LanguageSelector from "@/components/LangSelector";
 import { useTranslations } from "next-intl";
 import { lazy, Suspense } from "react";
-
 const AnimatedIconBg = lazy(() =>
   import("@/components/AnimatedBackground").then((module) => ({
     default: module.AnimatedIconBg,
@@ -53,17 +52,13 @@ export default function Home() {
           <AnimatedIconBg iconType="section1" />
         </Suspense>
         <div className="w-full px-20 ">
-          <h2 className="text-4xl mb-6">About Me</h2>
-          <p>
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-            Voluptatibus at natus provident quidem placeat reiciendis incidunt
-            pariatur eaque cupiditate officiis. Id, reprehenderit mollitia,
-            perspiciatis doloremque ut quisquam modi eveniet, exercitationem
-            magnam rerum ullam necessitatibus perferendis? Temporibus, sequi
-            sint adipisci necessitatibus ullam voluptates eligendi et sunt
-            repellat reiciendis a voluptas qui molestiae dolore porro ad tempore
-            fugit!
-          </p>
+          <h2 className="text-6xl mb-6">{t("about.title")}</h2>
+          <div className="w-full text-lg flex justify-between items-start gap-10">
+            <p className="flex-1">{t("about.content1")}</p>
+            <p className="flex-1">{t("about.content2")}</p>
+            <p className="flex-1">{t("about.content3")}</p>
+            <p className="flex-1">{t("about.content4")}</p>
+          </div>
         </div>
         <ScrollDownIndicator targetId="tech" />
       </section>

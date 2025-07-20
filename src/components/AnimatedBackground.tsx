@@ -149,7 +149,6 @@ interface AnimatedIconBgProps {
   speed?: number;
 }
 
-// Icon configuration - maps icon types to their SVG filenames
 const ICON_SETS: Record<string, string[]> = {
   section1: [
     "binary.svg",
@@ -240,7 +239,7 @@ function useIconPaths(iconType: string) {
 
 export function AnimatedIconBg({
   iconType,
-  iconCount = 50,
+  iconCount = 30,
   minDistance = 120,
   speed = 0.1,
 }: AnimatedIconBgProps) {
@@ -290,8 +289,8 @@ export function AnimatedIconBg({
         vx: (Math.random() - 0.5) * speed,
         vy: (Math.random() - 0.5) * speed,
         size: 25 + (i % 3) * 8,
-        opacity: 0.15 + (i % 4) * 0.01,
-        rotationSpeed: ((i % 5) - 2) * 0.05,
+        opacity: 0.1 + (i % 4) * 0,
+        rotationSpeed: ((i % 5) - 2) * 0,
         rotation: 0,
       }));
 

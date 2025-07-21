@@ -53,7 +53,7 @@ export default function Blob({
       xmlns="http://www.w3.org/2000/svg"
       role="img"
       aria-label={alt}
-      className="w-full h-auto max-w-md"
+      className="w-full h-auto max-w-md will-change-transform"
       whileHover={{
         scale: 1.05,
         transition: { duration: 0.2 },

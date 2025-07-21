@@ -1,8 +1,8 @@
+// components/AnimatedBackgroundOptimized.tsx
 "use client";
 
 import { motion, useMotionValue, useMotionTemplate } from "framer-motion";
-import { useState, useRef, useEffect, useReducer, useCallback } from "react";
-import Image from "next/image";
+import { useRef, useEffect } from "react";
 
 export function AnimatedGridBg() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -110,43 +110,15 @@ export function AnimatedGridBg() {
   );
 }
 
-export function AnimatedGradientBg() {
-  return (
-    <motion.div
-      className="absolute inset-0 -z-50"
-      style={{
-        background:
-          "linear-gradient(45deg, #000000, #010101, #111111, #121212)",
-        backgroundSize: "400% 400%",
-      }}
-      animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
-      transition={{
-        duration: 20,
-        ease: "easeInOut",
-        repeat: Infinity,
-      }}
-    />
-  );
-}
-
-interface FloatingIcon {
-  id: number;
-  iconPath: string;
+interface Icon {
+  img: HTMLImageElement;
   x: number;
   y: number;
   vx: number;
   vy: number;
   size: number;
-  opacity: number;
-  rotationSpeed: number;
   rotation: number;
-}
-
-interface AnimatedIconBgProps {
-  iconType: string;
-  iconCount?: number;
-  minDistance?: number;
-  speed?: number;
+  rotSpeed: number;
 }
 
 const ICON_SETS: Record<string, string[]> = {
@@ -186,240 +158,110 @@ const ICON_SETS: Record<string, string[]> = {
   ],
 };
 
-function generateOptimizedPositions(
-  width: number,
-  height: number,
-  iconCount: number,
-  minDistance: number
-): { x: number; y: number }[] {
-  const gridSize = minDistance;
-  const cols = Math.floor(width / gridSize);
-  const rows = Math.floor(height / gridSize);
-
-  const availablePositions: { x: number; y: number }[] = [];
-  for (let row = 0; row < rows; row++) {
-    for (let col = 0; col < cols; col++) {
-      availablePositions.push({
-        x: col * gridSize + Math.random() * (gridSize * 0.6),
-        y: row * gridSize + Math.random() * (gridSize * 0.6),
-      });
-    }
-  }
-
-  // Shuffle and take the first iconCount positions
-  for (let i = availablePositions.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [availablePositions[i], availablePositions[j]] = [
-      availablePositions[j],
-      availablePositions[i],
-    ];
-  }
-
-  return availablePositions.slice(
-    0,
-    Math.min(iconCount, availablePositions.length)
-  );
-}
-
-function useIconPaths(iconType: string) {
-  const [availableIcons, setAvailableIcons] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const iconSet = ICON_SETS[iconType] || [];
-    const iconPaths = iconSet.map(
-      (iconFile) => `/icons/${iconType}/${iconFile}`
-    );
-    setAvailableIcons(iconPaths);
-    setIsLoading(false);
-  }, [iconType]);
-
-  return { availableIcons, isLoading };
-}
-
 export function AnimatedIconBg({
   iconType,
-  iconCount = 30,
-  minDistance = 120,
-  speed = 0.1,
-}: AnimatedIconBgProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const animationRef = useRef<number>(null);
-  const lastTimeRef = useRef<number>(0);
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-  const iconsRef = useRef<FloatingIcon[]>([]);
-  const [, forceUpdate] = useReducer((x) => x + 1, 0);
-  const [isClient, setIsClient] = useState(false);
+  iconCount = 25,
+  speed = 0.02,
+  rotationSpeed = 0,
+  size = 40,
+  iconFilter = "invert(100%) brightness(0.1)",
+}: {
+  iconType: string;
+  iconCount?: number;
+  speed?: number;
+  rotationSpeed?: number;
+  size?: number;
+  iconFilter?: string;
+}) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const iconsRef = useRef<Icon[]>([]);
 
-  const { availableIcons, isLoading } = useIconPaths(iconType);
-
-  const throttledUpdate = useCallback(() => {
-    forceUpdate();
+  // 1) Set up canvas dimensions
+  useEffect(() => {
+    const canvas = canvasRef.current!;
+    const resize = () => {
+      canvas.width = canvas.clientWidth;
+      canvas.height = canvas.clientHeight;
+    };
+    resize();
+    window.addEventListener("resize", resize);
+    return () => window.removeEventListener("resize", resize);
   }, []);
 
+  // 2) Load images, initialize icons, and start the loop
   useEffect(() => {
-    setIsClient(true);
-  }, []);
+    const canvas = canvasRef.current!;
+    const ctx = canvas.getContext("2d")!;
+    const files = ICON_SETS[iconType] || [];
+    const imgs = files.slice(0, iconCount).map((f) => {
+      const img = new Image();
+      img.src = `/icons/${iconType}/${f}`;
+      return img;
+    });
 
-  useEffect(() => {
-    if (
-      isClient &&
-      dimensions.width > 0 &&
-      dimensions.height > 0 &&
-      availableIcons.length > 0 &&
-      !isLoading
-    ) {
-      const adaptiveIconCount = Math.min(
-        iconCount,
-        Math.floor((dimensions.width * dimensions.height) / 8000)
-      );
-
-      const positions = generateOptimizedPositions(
-        dimensions.width,
-        dimensions.height,
-        adaptiveIconCount,
-        minDistance
-      );
-
-      iconsRef.current = positions.map((pos, i) => ({
-        id: i,
-        iconPath: availableIcons[i % availableIcons.length],
-        x: pos.x,
-        y: pos.y,
+    Promise.all(
+      imgs.map((img) => new Promise((res) => (img.onload = res)))
+    ).then(() => {
+      const { width, height } = canvas;
+      const count = Math.min(iconCount, Math.floor((width * height) / 8000));
+      iconsRef.current = Array.from({ length: count }).map((_, i) => ({
+        img: imgs[i % imgs.length],
+        x: Math.random() * (width - 30),
+        y: Math.random() * (height - 30),
         vx: (Math.random() - 0.5) * speed,
         vy: (Math.random() - 0.5) * speed,
-        size: 25 + (i % 3) * 8,
-        opacity: 0.1 + (i % 4) * 0,
-        rotationSpeed: ((i % 5) - 2) * 0,
+        size: size,
         rotation: 0,
+        rotSpeed: ((i % 5) - 2) * rotationSpeed,
       }));
 
-      forceUpdate();
-    }
-  }, [
-    isClient,
-    dimensions.width,
-    dimensions.height,
-    availableIcons,
-    isLoading,
-    iconCount,
-    minDistance,
-    speed,
-  ]);
+      let last = performance.now();
+      const loop = (now: number) => {
+        const dt = now - last;
+        last = now;
+        ctx.clearRect(0, 0, width, height);
 
-  useEffect(() => {
-    let timeoutId: NodeJS.Timeout;
+        for (const ic of iconsRef.current) {
+          ic.x += ic.vx * dt;
+          ic.y += ic.vy * dt;
+          ic.rotation += ic.rotSpeed * dt;
 
-    const updateDimensions = () => {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => {
-        if (containerRef.current) {
-          const { width, height } =
-            containerRef.current.getBoundingClientRect();
-          setDimensions((prev) => {
-            if (
-              Math.abs(prev.width - width) > 50 ||
-              Math.abs(prev.height - height) > 50
-            ) {
-              return { width, height };
-            }
-            return prev;
-          });
+          if (ic.x < 0) {
+            ic.x = 0;
+            ic.vx *= -1;
+          } else if (ic.x + ic.size > width) {
+            ic.x = width - ic.size;
+            ic.vx *= -1;
+          }
+          if (ic.y < 0) {
+            ic.y = 0;
+            ic.vy *= -1;
+          } else if (ic.y + ic.size > height) {
+            ic.y = height - ic.size;
+            ic.vy *= -1;
+          }
+
+          ctx.save();
+          ctx.translate(ic.x + ic.size / 2, ic.y + ic.size / 2);
+          ctx.rotate(ic.rotation);
+          ctx.globalAlpha = 0.6;
+          // apply the new iconFilter prop here
+          ctx.filter = iconFilter;
+          ctx.drawImage(ic.img, -ic.size / 2, -ic.size / 2, ic.size, ic.size);
+          ctx.restore();
         }
-      }, 150);
-    };
 
-    updateDimensions();
-    window.addEventListener("resize", updateDimensions);
-    return () => {
-      window.removeEventListener("resize", updateDimensions);
-      clearTimeout(timeoutId);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!isClient || iconsRef.current.length === 0) return;
-
-    const targetFPS = 60;
-    const frameInterval = 1000 / targetFPS;
-
-    const animate = (currentTime: number) => {
-      const deltaTime = currentTime - lastTimeRef.current;
-
-      if (deltaTime >= frameInterval) {
-        const speedMultiplier = Math.min(deltaTime * 0.06, 1);
-
-        iconsRef.current = iconsRef.current.map((icon) => {
-          let newX = icon.x + icon.vx * speedMultiplier;
-          let newY = icon.y + icon.vy * speedMultiplier;
-          let newVx = icon.vx;
-          let newVy = icon.vy;
-
-          if (newX <= 0 || newX >= dimensions.width - icon.size) {
-            newVx = -newVx;
-            newX = Math.max(0, Math.min(dimensions.width - icon.size, newX));
-          }
-          if (newY <= 0 || newY >= dimensions.height - icon.size) {
-            newVy = -newVy;
-            newY = Math.max(0, Math.min(dimensions.height - icon.size, newY));
-          }
-
-          return {
-            ...icon,
-            x: newX,
-            y: newY,
-            vx: newVx,
-            vy: newVy,
-            rotation: icon.rotation + icon.rotationSpeed * speedMultiplier,
-          };
-        });
-
-        throttledUpdate();
-        lastTimeRef.current = currentTime;
-      }
-
-      animationRef.current = requestAnimationFrame(animate);
-    };
-
-    animationRef.current = requestAnimationFrame(animate);
-
-    return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
-    };
-  }, [isClient, dimensions.width, dimensions.height, throttledUpdate]);
-
-  if (!isClient || isLoading || availableIcons.length === 0) {
-    return null;
-  }
+        requestAnimationFrame(loop);
+      };
+      requestAnimationFrame(loop);
+    });
+  }, [iconType, iconCount, speed, size, rotationSpeed, iconFilter]);
 
   return (
-    <div ref={containerRef} className="absolute inset-0 -z-10 overflow-hidden">
-      {iconsRef.current.map((iconData) => (
-        <div
-          key={iconData.id}
-          className="absolute pointer-events-none"
-          style={{
-            transform: `translate(${iconData.x}px, ${iconData.y}px) rotate(${iconData.rotation}deg)`,
-            width: iconData.size,
-            height: iconData.size,
-            opacity: iconData.opacity,
-            willChange: "transform",
-          }}
-        >
-          <Image
-            src={iconData.iconPath}
-            alt="Floating icon"
-            width={iconData.size}
-            height={iconData.size}
-            className="w-full h-full object-contain filter brightness-0 invert opacity-70"
-            loading="eager"
-            unoptimized
-            priority={true}
-          />
-        </div>
-      ))}
-    </div>
+    <canvas
+      ref={canvasRef}
+      className="absolute inset-0 -z-10 overflow-hidden will-change-transform transform-gpu"
+      style={{ width: "100%", height: "100%" }}
+    />
   );
 }

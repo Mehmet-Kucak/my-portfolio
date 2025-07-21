@@ -1,13 +1,5 @@
 @import "tailwindcss";
 
-@font-face {
-  font-family: "LeagueSpartan";
-  src: url("/fonts/LeagueSpartan.woff2") format("woff2-variations");
-  font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
-}
-
 html {
   scroll-behavior: smooth;
 }
@@ -38,4 +30,26 @@ body {
   scroll-snap-align: start;
   scroll-snap-stop: always;
   height: 100vh;
+  min-height: 100dvh; /* Dynamic viewport height for mobile */
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .snap-container {
+    height: 100dvh; /* Use dynamic viewport height on mobile */
+  }
+
+  .snap-section {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    height: 100dvh;
+    min-height: 600px; /* Minimum height for very small screens */
+  }
+}
+
+/* Ensure text is readable on small screens */
+@media (max-width: 480px) {
+  .snap-section {
+    min-height: 500px;
+  }
 }

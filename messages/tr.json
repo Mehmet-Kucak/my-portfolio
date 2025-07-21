@@ -8,7 +8,7 @@
     },
     "about":{
       "title": "Hakkımda",
-      "content1": "Merhaba, ben Mehmet Kucak. Türkiye'den 18 yaşında bir geliştiriciyim. Yazılıma 12 yaşında Scratch'te oyun yapmaya çalışarak başladım ve bu araştırma oyun motorları, programlama dilleri ve web geliştirme alanında bir yolculuğa dönüştü.",
+      "content1": "Merhaba, ben Mehmet Kucak. Türkiye'den {age} yaşında bir geliştiriciyim. Yazılıma 12 yaşında Scratch'te oyun yapmaya çalışarak başladım ve bu araştırma oyun motorları, programlama dilleri ve web geliştirme alanında bir yolculuğa dönüştü.",
       "content2": "Web geliştirme benim için özeldi çünkü herhangi bir platformda herkes tarafından kullanılabilecek interaktif bir uygulama yaratma fikri bana büyülü geliyordu. Bu fikirle React, TypeScript, Next.js, Node.js ve PostgreSQL gibi teknolojileri öğrenmeye başladım.",
       "content3": "Okul ve üniversite sınavlarına hazırlanırken, Teknofest, First Lego League ve çeşitli programlama yarışmalarına katılma fırsatım oldu. Bu yarışmaların birçoğunda finalist oldum ve ödüller kazandım. Bu deneyimler bana problem çözme, takım çalışması, zaman yönetimi ve daha birçok yetenek öğretti.",
       "content4": "Şu anda üniversiteye hazırlanırken projeler geliştirmeye, becerilerimi geliştirmeye ve yenilerini öğrenmeye devam ediyorum. Bir projeniz firkiniz mi ya da sadece sohbet etmek mi istiyorsunuz? Bana çekinmeden ulaşabilirsiniz. İletişim bilgilerimi aşağıda görebilirsiniz."

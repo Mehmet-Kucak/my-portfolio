@@ -32,9 +32,8 @@ export default function ScrollDownIndicator({
         delay: 5,
         times: [0, 0.2, 0.8, 1],
       }}
-      className="absolute bottom-10 left-1/2 -translate-x-1/2 cursor-pointer"
+      className="absolute bottom-10 left-1/2 -translate-x-1/2 cursor-pointer will-change-transform"
       onClick={handleClick}
-      whileHover={{ scale: 1.2 }}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

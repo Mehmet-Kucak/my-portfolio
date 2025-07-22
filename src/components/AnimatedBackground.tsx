@@ -1,111 +1,167 @@
-// components/AnimatedBackgroundOptimized.tsx
 "use client";
 
-import { motion, useMotionValue, useMotionTemplate } from "framer-motion";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState, useCallback } from "react";
 
 export function AnimatedGridBg() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const animationRef = useRef<number>(0);
+  const mouseRef = useRef({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
 
-  const baseGrid = `
-    repeating-linear-gradient(
-      0deg,
-      rgba(255,255,255,0.05) 0, rgba(255,255,255,0.05) 2px,
-      transparent 2px, transparent 50px
-    ),
-    repeating-linear-gradient(
-      90deg,
-      rgba(255,255,255,0.05) 0, rgba(255,255,255,0.05) 2px,
-      transparent 2px, transparent 50px
-    )
-  `;
+  const drawGrid = useCallback(
+    (ctx: CanvasRenderingContext2D, width: number, height: number) => {
+      const gridSize = 50;
+      const lineWidth = 2;
 
-  const highlightGrid = `
-    repeating-linear-gradient(
-      0deg,
-      rgba(255,255,255,0.15) 0, rgba(255,255,255,0.15) 2px,
-      transparent 2px, transparent 50px
-    ),
-    repeating-linear-gradient(
-      90deg,
-      rgba(255,255,255,0.15) 0, rgba(255,255,255,0.15) 2px,
-      transparent 2px, transparent 50px
-    )
-  `;
+      ctx.clearRect(0, 0, width, height);
 
-  const spotlightMask = useMotionTemplate`
-    radial-gradient(
-      circle at ${mouseX}px ${mouseY}px,
-      black 0%,
-      transparent 150px
-    )
-  `;
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.05)";
+      ctx.lineWidth = lineWidth;
+      ctx.beginPath();
 
-  const edgeMask = `
-    radial-gradient(
-      circle at center,
-      black 1%,
-      transparent 100%
-    )
-  `;
+      for (let x = 0; x <= width; x += gridSize) {
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, height);
+      }
+
+      for (let y = 0; y <= height; y += gridSize) {
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y);
+      }
+
+      ctx.stroke();
+
+      const spotlightRadius = 150;
+      const gradient = ctx.createRadialGradient(
+        mouseRef.current.x,
+        mouseRef.current.y,
+        0,
+        mouseRef.current.x,
+        mouseRef.current.y,
+        spotlightRadius
+      );
+      gradient.addColorStop(0, "rgba(255, 255, 255, 0.15)");
+      gradient.addColorStop(1, "rgba(255, 255, 255, 0)");
+
+      ctx.strokeStyle = gradient;
+      ctx.lineWidth = lineWidth;
+      ctx.beginPath();
+
+      const minX = Math.max(
+        0,
+        Math.floor((mouseRef.current.x - spotlightRadius) / gridSize) * gridSize
+      );
+      const maxX = Math.min(
+        width,
+        Math.ceil((mouseRef.current.x + spotlightRadius) / gridSize) * gridSize
+      );
+      const minY = Math.max(
+        0,
+        Math.floor((mouseRef.current.y - spotlightRadius) / gridSize) * gridSize
+      );
+      const maxY = Math.min(
+        height,
+        Math.ceil((mouseRef.current.y + spotlightRadius) / gridSize) * gridSize
+      );
+
+      for (let x = minX; x <= maxX; x += gridSize) {
+        ctx.moveTo(x, Math.max(0, mouseRef.current.y - spotlightRadius));
+        ctx.lineTo(x, Math.min(height, mouseRef.current.y + spotlightRadius));
+      }
+
+      for (let y = minY; y <= maxY; y += gridSize) {
+        ctx.moveTo(Math.max(0, mouseRef.current.x - spotlightRadius), y);
+        ctx.lineTo(Math.min(width, mouseRef.current.x + spotlightRadius), y);
+      }
+
+      ctx.stroke();
+
+      const edgeGradient = ctx.createRadialGradient(
+        width / 2,
+        height / 2,
+        Math.min(width, height) * 0.3,
+        width / 2,
+        height / 2,
+        Math.min(width, height) * 0.7
+      );
+      edgeGradient.addColorStop(0, "rgba(0, 0, 0, 0)");
+      edgeGradient.addColorStop(1, "rgba(0, 0, 0, 0.6)");
+
+      ctx.globalCompositeOperation = "destination-out";
+      ctx.fillStyle = edgeGradient;
+      ctx.fillRect(0, 0, width, height);
+      ctx.globalCompositeOperation = "source-over";
+    },
+    []
+  );
+
+  const animate = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const rect = canvas.getBoundingClientRect();
+    drawGrid(ctx, canvas.width, canvas.height);
+
+    animationRef.current = requestAnimationFrame(animate);
+  }, [drawGrid]);
 
   useEffect(() => {
-    if (!containerRef.current) return;
-    const { width, height } = containerRef.current.getBoundingClientRect();
-    mouseX.set(width / 2);
-    mouseY.set(height / 2);
-  }, [mouseX, mouseY]);
+    const canvas = canvasRef.current;
+    const container = containerRef.current;
+    if (!canvas || !container) return;
 
-  useEffect(() => {
-    const handle = (e: MouseEvent) => {
-      if (!containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
+    const updateCanvasSize = () => {
+      const rect = container.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+
+      // Set initial mouse position to center
+      mouseRef.current = {
+        x: rect.width / 2,
+        y: rect.height / 2,
+      };
+    };
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!container) return;
+      const rect = container.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
+
       if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
-        mouseX.set(x);
-        mouseY.set(y);
+        mouseRef.current = { x, y };
       }
     };
-    window.addEventListener("mousemove", handle);
-    return () => window.removeEventListener("mousemove", handle);
-  }, [mouseX, mouseY]);
+
+    const handleResize = () => {
+      updateCanvasSize();
+    };
+
+    updateCanvasSize();
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("resize", handleResize);
+
+    animate();
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("resize", handleResize);
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [animate]);
 
   return (
     <div ref={containerRef} className="absolute inset-0 -z-50">
-      <div
+      <canvas
+        ref={canvasRef}
         className="absolute inset-0 pointer-events-none"
-        style={{
-          backgroundImage: baseGrid,
-          WebkitMaskImage: edgeMask,
-          maskImage: edgeMask,
-          WebkitMaskRepeat: "no-repeat",
-          maskRepeat: "no-repeat",
-        }}
+        style={{ background: "transparent" }}
       />
-
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          WebkitMaskImage: edgeMask,
-          maskImage: edgeMask,
-          WebkitMaskRepeat: "no-repeat",
-          maskRepeat: "no-repeat",
-        }}
-      >
-        <motion.div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: highlightGrid,
-            WebkitMaskImage: spotlightMask,
-            WebkitMaskRepeat: "no-repeat",
-            maskImage: spotlightMask,
-            maskRepeat: "no-repeat",
-          }}
-        />
-      </div>
     </div>
   );
 }
@@ -164,7 +220,7 @@ export function AnimatedIconBg({
   speed = 0.02,
   rotationSpeed = 0,
   size = 40,
-  iconFilter = "invert(100%) brightness(0.1)",
+  iconFilter = "invert(100%) brightness(0.25)",
 }: {
   iconType: string;
   iconCount?: number;
@@ -175,93 +231,231 @@ export function AnimatedIconBg({
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const iconsRef = useRef<Icon[]>([]);
+  const animationIdRef = useRef<number | null>(null);
+  const lastTimeRef = useRef<number>(0);
 
-  // 1) Set up canvas dimensions
+  const [isVisible, setIsVisible] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
+
   useEffect(() => {
-    const canvas = canvasRef.current!;
-    const resize = () => {
-      canvas.width = canvas.clientWidth;
-      canvas.height = canvas.clientHeight;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        setIsVisible(entry.isIntersecting);
+      },
+      {
+        threshold: 1,
+        rootMargin: "0px",
+      }
+    );
+
+    observer.observe(canvas);
+
+    return () => {
+      observer.unobserve(canvas);
     };
-    resize();
-    window.addEventListener("resize", resize);
-    return () => window.removeEventListener("resize", resize);
   }, []);
 
-  // 2) Load images, initialize icons, and start the loop
+  // Canvas dimensions setup with debouncing
   useEffect(() => {
-    const canvas = canvasRef.current!;
-    const ctx = canvas.getContext("2d")!;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    let resizeTimeout: NodeJS.Timeout;
+
+    const resize = () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        canvas.width = canvas.clientWidth;
+        canvas.height = canvas.clientHeight;
+
+        // Reinitialize icons if they exist and canvas size changed significantly
+        if (iconsRef.current.length > 0) {
+          const { width, height } = canvas;
+          iconsRef.current.forEach((icon) => {
+            // Keep icons within new bounds
+            icon.x = Math.min(icon.x, width - icon.size);
+            icon.y = Math.min(icon.y, height - icon.size);
+          });
+        }
+      }, 100);
+    };
+
+    resize();
+    window.addEventListener("resize", resize);
+
+    return () => {
+      window.removeEventListener("resize", resize);
+      clearTimeout(resizeTimeout);
+    };
+  }, []);
+
+  // Animation loop with visibility control
+  const animate = useCallback(
+    (now: number) => {
+      const canvas = canvasRef.current;
+      if (!canvas || !isVisible || !isLoaded) {
+        animationIdRef.current = requestAnimationFrame(animate);
+        return;
+      }
+
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+
+      const dt = now - lastTimeRef.current;
+      lastTimeRef.current = now;
+
+      // Limit frame rate to 60fps and skip frames if dt is too small
+      if (dt < 16) {
+        animationIdRef.current = requestAnimationFrame(animate);
+        return;
+      }
+
+      const { width, height } = canvas;
+
+      // Use faster clearing method
+      ctx.clearRect(0, 0, width, height);
+
+      // Batch canvas operations for better performance
+      ctx.globalAlpha = 0.6;
+      ctx.filter = iconFilter;
+
+      for (const icon of iconsRef.current) {
+        // Update position and rotation
+        icon.x += icon.vx * dt;
+        icon.y += icon.vy * dt;
+        icon.rotation += icon.rotSpeed * dt;
+
+        // Boundary collision with more efficient checks
+        if (icon.x <= 0 || icon.x + icon.size >= width) {
+          icon.x = Math.max(0, Math.min(width - icon.size, icon.x));
+          icon.vx *= -1;
+        }
+
+        if (icon.y <= 0 || icon.y + icon.size >= height) {
+          icon.y = Math.max(0, Math.min(height - icon.size, icon.y));
+          icon.vy *= -1;
+        }
+
+        // Draw with minimal state changes
+        ctx.save();
+        ctx.translate(icon.x + icon.size / 2, icon.y + icon.size / 2);
+        ctx.rotate(icon.rotation);
+        ctx.drawImage(
+          icon.img,
+          -icon.size / 2,
+          -icon.size / 2,
+          icon.size,
+          icon.size
+        );
+        ctx.restore();
+      }
+
+      animationIdRef.current = requestAnimationFrame(animate);
+    },
+    [isVisible, isLoaded, iconFilter]
+  );
+
+  // Icon loading and initialization
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    setIsLoaded(false);
+
     const files = ICON_SETS[iconType] || [];
+    if (files.length === 0) return;
+
     const imgs = files.slice(0, iconCount).map((f) => {
       const img = new Image();
       img.src = `/icons/${iconType}/${f}`;
+
+      img.onerror = () => {
+        console.warn(`Failed to load icon: ${f}`);
+      };
+
       return img;
     });
 
-    Promise.all(
-      imgs.map((img) => new Promise((res) => (img.onload = res)))
-    ).then(() => {
-      const { width, height } = canvas;
-      const count = Math.min(iconCount, Math.floor((width * height) / 8000));
-      iconsRef.current = Array.from({ length: count }).map((_, i) => ({
-        img: imgs[i % imgs.length],
-        x: Math.random() * (width - 30),
-        y: Math.random() * (height - 30),
-        vx: (Math.random() - 0.5) * speed,
-        vy: (Math.random() - 0.5) * speed,
-        size: size,
-        rotation: 0,
-        rotSpeed: ((i % 5) - 2) * rotationSpeed,
-      }));
+    Promise.allSettled(
+      imgs.map(
+        (img) =>
+          new Promise((resolve, reject) => {
+            img.onload = resolve;
+            img.onerror = reject;
 
-      let last = performance.now();
-      const loop = (now: number) => {
-        const dt = now - last;
-        last = now;
-        ctx.clearRect(0, 0, width, height);
+            setTimeout(() => reject(new Error("Image load timeout")), 5000);
+          })
+      )
+    )
+      .then(() => {
+        const validImages = imgs.filter(
+          (img) => img.complete && img.naturalHeight > 0
+        );
 
-        for (const ic of iconsRef.current) {
-          ic.x += ic.vx * dt;
-          ic.y += ic.vy * dt;
-          ic.rotation += ic.rotSpeed * dt;
+        if (validImages.length === 0) return;
 
-          if (ic.x < 0) {
-            ic.x = 0;
-            ic.vx *= -1;
-          } else if (ic.x + ic.size > width) {
-            ic.x = width - ic.size;
-            ic.vx *= -1;
-          }
-          if (ic.y < 0) {
-            ic.y = 0;
-            ic.vy *= -1;
-          } else if (ic.y + ic.size > height) {
-            ic.y = height - ic.size;
-            ic.vy *= -1;
-          }
+        iconsRef.current = Array.from({ length: iconCount }).map((_, i) => ({
+          img: validImages[i % validImages.length],
+          x: Math.random() * Math.max(0, window.innerWidth),
+          y: Math.random() * Math.max(0, window.innerHeight),
+          vx: (Math.random() - 0.5) * speed,
+          vy: (Math.random() - 0.5) * speed,
+          size: size,
+          rotation: 0,
+          rotSpeed: ((i % 5) - 2) * rotationSpeed,
+        }));
 
-          ctx.save();
-          ctx.translate(ic.x + ic.size / 2, ic.y + ic.size / 2);
-          ctx.rotate(ic.rotation);
-          ctx.globalAlpha = 0.6;
-          // apply the new iconFilter prop here
-          ctx.filter = iconFilter;
-          ctx.drawImage(ic.img, -ic.size / 2, -ic.size / 2, ic.size, ic.size);
-          ctx.restore();
-        }
+        setIsLoaded(true);
+      })
+      .catch((error) => {
+        console.warn("Some icons failed to load:", error);
+        setIsLoaded(true);
+      });
+  }, [iconType, iconCount, speed, size, rotationSpeed]);
 
-        requestAnimationFrame(loop);
-      };
-      requestAnimationFrame(loop);
-    });
-  }, [iconType, iconCount, speed, size, rotationSpeed, iconFilter]);
+  // Start/stop animation based on visibility and loading state
+  useEffect(() => {
+    if (isVisible && isLoaded) {
+      lastTimeRef.current = performance.now();
+      animationIdRef.current = requestAnimationFrame(animate);
+    } else if (animationIdRef.current) {
+      cancelAnimationFrame(animationIdRef.current);
+      animationIdRef.current = null;
+    }
+
+    return () => {
+      if (animationIdRef.current) {
+        cancelAnimationFrame(animationIdRef.current);
+        animationIdRef.current = null;
+      }
+    };
+  }, [isVisible, isLoaded, animate]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (animationIdRef.current) {
+        cancelAnimationFrame(animationIdRef.current);
+      }
+    };
+  }, []);
 
   return (
     <canvas
       ref={canvasRef}
       className="absolute inset-0 -z-10 overflow-hidden will-change-transform transform-gpu"
-      style={{ width: "100%", height: "100%" }}
+      style={{
+        width: "100%",
+        height: "100%",
+        contain: "layout style paint",
+      }}
+      // Add accessibility
+      role="presentation"
+      aria-hidden="true"
     />
   );
 }

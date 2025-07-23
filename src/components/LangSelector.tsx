@@ -11,6 +11,7 @@ import {
 import type { Variants } from "framer-motion";
 import { motion, AnimatePresence, useAnimation } from "framer-motion";
 import { useLocale } from "next-intl";
+
 const AVAILABLE = ["en", "tr"];
 const languages = [
   { code: "en", label: "English" },
@@ -60,7 +61,7 @@ export default function LanguageSelector() {
               <li key={l.code}>
                 <button
                   onClick={() => changeLang(l.code)}
-                  className="w-full text-left px-4 py-2 hover:bg-white/20"
+                  className="w-full text-right px-4 py-1 hover:bg-white/20"
                 >
                   {l.label}
                 </button>

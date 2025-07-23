@@ -1,5 +1,7 @@
 import BlobImage from "@/components/BlobImage";
 import ChangingText from "@/components/ChangingText";
+import MainTabs from "@/components/Tabs";
+import TechCard from "@/components/TechCard";
 import { useTranslations } from "next-intl";
 import { lazy, Suspense } from "react";
 
@@ -38,7 +40,7 @@ export default function Home() {
           <AnimatedGridBg />
         </Suspense>
         <div className="relative flex flex-col lg:flex-row items-center justify-center h-full w-full px-4 sm:px-8 md:px-12 lg:px-20 py-8 lg:py-0">
-          <div className="text-center lg:text-left  lg:mb-0 lg:flex-1">
+          <div className="text-center mt-10 lg:text-left lg:mb-0 lg:flex-1">
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight">
               {t("hero.title")}
             </h1>
@@ -51,7 +53,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="flex-shrink-0 mb-8 lg:mb-0">
+          <div className="flex-shrink-0 lg:h-full  mb-8 lg:mb-0">
             <BlobImage src="/photo.webp" alt="Photo" priority={true} />
           </div>
         </div>
@@ -63,27 +65,44 @@ export default function Home() {
         className="relative snap-section w-screen h-screen flex items-center"
       >
         <Suspense fallback={null}>
-          <AnimatedIconBg iconType="section1" />
+          <AnimatedIconBg
+            iconType="section1"
+            iconFilter="invert(100%) brightness(0.1)"
+          />
         </Suspense>
-        <div className="w-full px-4 sm:px-8 md:px-12 lg:px-20 py-8">
+        <div className="w-full h-full flex flex-col justify-center px-4 sm:px-8 md:px-12 lg:px-20 py-8">
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-6 text-center lg:text-left">
             {t("about.title")}
           </h2>
           <div className="w-full text-sm sm:text-base lg:text-lg">
             <div className="flex flex-col lg:hidden space-y-6">
-              <p>{t("about.content1", { age: currentAge })}</p>
-              <p>{t("about.content2")}</p>
-              <p>{t("about.content3")}</p>
-              <p>{t("about.content4")}</p>
+              <p className="bg-white/5 backdrop-blur-xs p-2 rounded-2xl">
+                {t("about.content1", { age: currentAge })}
+              </p>
+              <p className="bg-white/5 backdrop-blur-xs p-2 rounded-2xl">
+                {t("about.content2")}
+              </p>
+              <p className="bg-white/5 backdrop-blur-xs p-2 rounded-2xl">
+                {t("about.content3")}
+              </p>
+              <p className="bg-white/5 backdrop-blur-xs p-2 rounded-2xl">
+                {t("about.content4")}
+              </p>
             </div>
 
-            <div className="hidden lg:flex justify-between items-start gap-6 xl:gap-10">
-              <p className="flex-1">
+            <div className="hidden lg:flex justify-between items-stretch gap-6 xl:gap-10">
+              <p className="flex-1 bg-white/5 backdrop-blur-xs p-2 rounded-2xl">
                 {t("about.content1", { age: new Date().getFullYear() - 2007 })}
               </p>
-              <p className="flex-1">{t("about.content2")}</p>
-              <p className="flex-1">{t("about.content3")}</p>
-              <p className="flex-1">{t("about.content4")}</p>
+              <p className="flex-1 bg-white/5 backdrop-blur-xs p-2 rounded-2xl">
+                {t("about.content2")}
+              </p>
+              <p className="flex-1 bg-white/5 backdrop-blur-xs p-2 rounded-2xl">
+                {t("about.content3")}
+              </p>
+              <p className="flex-1 bg-white/5 backdrop-blur-xs p-2 rounded-2xl">
+                {t("about.content4")}
+              </p>
             </div>
           </div>
         </div>
@@ -95,22 +114,212 @@ export default function Home() {
         className="relative snap-section w-screen h-screen flex items-center"
       >
         <Suspense fallback={null}>
-          <AnimatedIconBg iconType="section2" />
+          <AnimatedIconBg
+            iconType="section2"
+            iconFilter="invert(100%) brightness(0.1)"
+          />
         </Suspense>
-        <div className="w-full px-4 sm:px-8 md:px-12 lg:px-20 py-8">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl mb-6 text-center lg:text-left">
+        <div className="w-full h-full flex flex-col justify-center px-4 sm:px-8 md:px-12 lg:px-20 py-8">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-4 sm:mb-6 text-center lg:text-left">
             Tech Stack
           </h2>
-          <p className="text-sm sm:text-base lg:text-lg leading-relaxed">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-            Voluptatibus at natus provident quidem placeat reiciendis incidunt
-            pariatur eaque cupiditate officiis. Id, reprehenderit mollitia,
-            perspiciatis doloremque ut quisquam modi eveniet, exercitationem
-            magnam rerum ullam necessitatibus perferendis? Temporibus, sequi
-            sint adipisci necessitatibus ullam voluptates eligendi et sunt
-            repellat reiciendis a voluptas qui molestiae dolore porro ad tempore
-            fugit!
-          </p>
+          <MainTabs
+            items={[
+              {
+                id: "frontend",
+                label: "Front End",
+                content: (
+                  <div className="w-full h-full flex flex-wrap gap-2 sm:gap-3 md:gap-4 justify-center sm:justify-start px-2 sm:px-4 pb-2 sm:pb-4">
+                    <TechCard
+                      index={1}
+                      icon={
+                        <img
+                          className="filter invert w-full h-full object-contain"
+                          src="/icons/section2/react.svg"
+                          alt="React Icon"
+                        />
+                      }
+                    />
+                    <TechCard
+                      index={2}
+                      icon={
+                        <img
+                          className="filter invert w-full h-full object-contain"
+                          src="/icons/section2/javascript.svg"
+                          alt="JS Icon"
+                        />
+                      }
+                    />
+                    <TechCard
+                      index={3}
+                      icon={
+                        <img
+                          className="filter invert w-full h-full object-contain"
+                          src="/icons/section2/typescript.svg"
+                          alt="TS Icon"
+                        />
+                      }
+                    />
+                    <TechCard
+                      index={4}
+                      icon={
+                        <img
+                          className="filter invert w-full h-full object-contain"
+                          src="/icons/section2/html5.svg"
+                          alt="HTML5 Icon"
+                        />
+                      }
+                    />
+                    <TechCard
+                      index={5}
+                      icon={
+                        <img
+                          className="filter invert w-full h-full object-contain"
+                          src="/icons/section2/css.svg"
+                          alt="CSS Icon"
+                        />
+                      }
+                    />
+                    <TechCard
+                      index={6}
+                      icon={
+                        <img
+                          className="filter invert w-full h-full object-contain"
+                          src="/icons/section2/tailwindcss.svg"
+                          alt="TailwindCSS Icon"
+                        />
+                      }
+                    />
+                  </div>
+                ),
+              },
+              {
+                id: "backend",
+                label: "Back End",
+                content: (
+                  <div className="w-full h-full flex flex-wrap gap-2 sm:gap-3 md:gap-4 justify-center sm:justify-start px-2 sm:px-4 pb-2 sm:pb-4">
+                    <TechCard
+                      index={1}
+                      icon={
+                        <img
+                          className="filter invert w-full h-full object-contain"
+                          src="/icons/section2/nodedotjs.svg"
+                          alt="NodeJS Icon"
+                        />
+                      }
+                    />
+                    <TechCard
+                      index={2}
+                      icon={
+                        <img
+                          className="filter invert w-full h-full object-contain"
+                          src="/icons/section2/expressdotcom.svg"
+                          alt="ExpressJS Icon"
+                        />
+                      }
+                    />
+                    <TechCard
+                      index={3}
+                      icon={
+                        <img
+                          className="filter invert w-full h-full object-contain"
+                          src="/icons/section2/python.svg"
+                          alt="Python Icon"
+                        />
+                      }
+                    />
+                  </div>
+                ),
+              },
+              {
+                id: "databases",
+                label: "Databases",
+                content: (
+                  <div className="w-full h-full flex flex-wrap gap-2 sm:gap-3 md:gap-4 justify-center sm:justify-start px-2 sm:px-4 pb-2 sm:pb-4">
+                    <TechCard
+                      index={1}
+                      icon={
+                        <img
+                          className="filter invert w-full h-full object-contain"
+                          src="/icons/section2/postgresql.svg"
+                          alt="PostgreSQL Icon"
+                        />
+                      }
+                    />
+                    <TechCard
+                      index={2}
+                      icon={
+                        <img
+                          className="filter invert w-full h-full object-contain"
+                          src="/icons/section2/firebase.svg"
+                          alt="Firebase Icon"
+                        />
+                      }
+                    />
+                  </div>
+                ),
+              },
+              {
+                id: "cloud-devops",
+                label: "Cloud/DevOps",
+                content: (
+                  <div className="w-full h-full flex flex-wrap gap-2 sm:gap-3 md:gap-4 justify-center sm:justify-start px-2 sm:px-4 pb-2 sm:pb-4">
+                    <TechCard
+                      index={1}
+                      icon={
+                        <img
+                          className="filter invert w-full h-full object-contain"
+                          src="/icons/section2/googlecloud.svg"
+                          alt="Google Cloud Icon"
+                        />
+                      }
+                    />
+                    <TechCard
+                      index={2}
+                      icon={
+                        <img
+                          className="filter invert w-full h-full object-contain"
+                          src="/icons/section2/firebase.svg"
+                          alt="Firebase Icon"
+                        />
+                      }
+                    />
+                    <TechCard
+                      index={3}
+                      icon={
+                        <img
+                          className="filter invert w-full h-full object-contain"
+                          src="/icons/section2/supabase.svg"
+                          alt="Supabase Icon"
+                        />
+                      }
+                    />
+                    <TechCard
+                      index={4}
+                      icon={
+                        <img
+                          className="filter invert w-full h-full object-contain"
+                          src="/icons/section2/vercel.svg"
+                          alt="Vercel Icon"
+                        />
+                      }
+                    />
+                    <TechCard
+                      index={5}
+                      icon={
+                        <img
+                          className="filter invert w-full h-full object-contain"
+                          src="/icons/section2/git.svg"
+                          alt="Git Icon"
+                        />
+                      }
+                    />
+                  </div>
+                ),
+              },
+            ]}
+            defaultTab={"frontend"}
+          />
         </div>
       </section>
     </main>

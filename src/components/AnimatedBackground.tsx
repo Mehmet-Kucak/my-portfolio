@@ -248,7 +248,7 @@ export function AnimatedIconBg({
       },
       {
         threshold: 1,
-        rootMargin: "0px",
+        rootMargin: "100px",
       }
     );
 

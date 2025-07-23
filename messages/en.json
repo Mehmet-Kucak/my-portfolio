@@ -12,6 +12,13 @@
       "content2": "Web development was special for me because the idea of creating an interactive app that can be used on any platform by anyone was magical to me. With that idea in mind, I started learning technologies like React, TypeScript, NextJS, NodeJS, and PostgreSQL.",
       "content3": "While studying for school and university entrance exams, I've had the opportunity to participate in competitions like Teknofest, First Lego League, and various programming challenges and they taught me a lot about problem-solving, time managment, teamwork, and much more.",
       "content4": "Currently studying for university while continuing to build projects, improve my skills, and learn new ones. Got an interesting project or just want to talk? Don't hesitate to reach out, I'm always up for a good conversation! You can see my contact information below."
+    },
+    "tech":{
+      "title": "Tech Stack",
+      "subtitle1": "Front End",
+      "subtitle2": "Back End",
+      "subtitle3": "Database",
+      "subtitle4": "Cloud/DevOps"
     }
   }
 }

@@ -102,7 +102,6 @@ export function AnimatedGridBg() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const rect = canvas.getBoundingClientRect();
     drawGrid(ctx, canvas.width, canvas.height);
 
     animationRef.current = requestAnimationFrame(animate);

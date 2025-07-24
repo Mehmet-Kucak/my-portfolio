@@ -19,6 +19,11 @@
       "subtitle2": "Back End",
       "subtitle3": "Database",
       "subtitle4": "Cloud/DevOps"
+    },
+    "projects":{
+      "title": "Projects",
+      "pagnation": "{currentPage} of {totalPages}",
+      "totalLength": "{length} total projects"
     }
   }
 }

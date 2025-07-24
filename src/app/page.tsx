@@ -34,6 +34,11 @@ const TechCard = lazy(() =>
     default: module.default,
   }))
 );
+const ProjectsSection = lazy(() =>
+  import("@/components/ProjectsSection").then((module) => ({
+    default: module.default,
+  }))
+);
 const currentAge = new Date().getFullYear() - 2007;
 
 export default function Home() {
@@ -85,31 +90,31 @@ export default function Home() {
           </h2>
           <div className="w-full text-sm sm:text-base lg:text-lg">
             <div className="flex flex-col lg:hidden space-y-6">
-              <p className="bg-white/5 p-2 rounded-2xl">
+              <p className="bg-white/5 backdrop-blur-xs p-2 rounded-2xl">
                 {t("about.content1", { age: currentAge })}
               </p>
-              <p className="bg-white/5 p-2 rounded-2xl">
+              <p className="bg-white/5 backdrop-blur-xs p-2 rounded-2xl">
                 {t("about.content2")}
               </p>
-              <p className="bg-white/5 p-2 rounded-2xl">
+              <p className="bg-white/5 backdrop-blur-xs p-2 rounded-2xl">
                 {t("about.content3")}
               </p>
-              <p className="bg-white/5 p-2 rounded-2xl">
+              <p className="bg-white/5 backdrop-blur-xs p-2 rounded-2xl">
                 {t("about.content4")}
               </p>
             </div>
 
             <div className="hidden lg:flex justify-between items-stretch gap-6 xl:gap-10">
-              <p className="flex-1 bg-white/5 p-2 rounded-2xl">
+              <p className="flex-1 bg-white/5 backdrop-blur-xs p-2 rounded-2xl">
                 {t("about.content1", { age: new Date().getFullYear() - 2007 })}
               </p>
-              <p className="flex-1 bg-white/5 p-2 rounded-2xl">
+              <p className="flex-1 bg-white/5 backdrop-blur-xs p-2 rounded-2xl">
                 {t("about.content2")}
               </p>
-              <p className="flex-1 bg-white/5 p-2 rounded-2xl">
+              <p className="flex-1 bg-white/5 backdrop-blur-xs p-2 rounded-2xl">
                 {t("about.content3")}
               </p>
-              <p className="flex-1 bg-white/5 p-2 rounded-2xl">
+              <p className="flex-1 bg-white/5 backdrop-blur-xs p-2 rounded-2xl">
                 {t("about.content4")}
               </p>
             </div>
@@ -129,10 +134,11 @@ export default function Home() {
           />
         </Suspense>
         <div className="w-full h-full flex flex-col justify-center px-4 sm:px-8 md:px-12 lg:px-20 py-8">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-4 sm:mb-6 text-center lg:text-left">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-2 sm:mb-3 text-center lg:text-left">
             {t("tech.title")}
           </h2>
           <Tabs
+            className=""
             items={[
               {
                 id: "frontend",
@@ -367,9 +373,9 @@ export default function Home() {
 
       <section
         id="projects"
-        className="relative snap-section w-screen h-screen flex items-center"
+        className="relative snap-section w-screen h-screen"
       >
-        <div className="w-full h-full flex flex-col justify-center px-4 sm:px-8 md:px-12 lg:px-20 py-8"></div>
+        <ProjectsSection />
       </section>
     </main>
   );

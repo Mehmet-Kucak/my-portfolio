@@ -7,8 +7,8 @@ export function useResponsiveProjects() {
 
   useEffect(() => {
     const updateProjectsPerPage = () => {
-      if (window.innerWidth < 640) {
-        if (window.innerHeight > 800) {
+      if (window.innerWidth < 600) {
+        if (window.innerHeight > 730) {
           setProjectsPerPage(2);
         } else {
           setProjectsPerPage(1);

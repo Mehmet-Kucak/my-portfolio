@@ -34,7 +34,7 @@ export default function ProjectCard({
       }}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
-      className="relative group cursor-pointer w-full h-85/100"
+      className="relative group cursor-pointer w-full h-9/10"
     >
       <div className="relative w-full h-full min-h-[280px] max-h-[400px] sm:min-h-[320px] sm:max-h-[450px] lg:min-h-[360px] lg:max-h-[500px] bg-gradient-to-br from-gray-900/90 to-gray-800/70 backdrop-blur-sm rounded-2xl border border-gray-700/50 overflow-hidden shadow-2xl hover:shadow-blue-500/10 transition-all duration-300">
         {/* Image Container */}

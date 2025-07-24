@@ -143,14 +143,14 @@ export default function Home() {
 
       <div
         ref={containerRef}
-        className={`flex-1 max-h-[calc(100vh-180px)] overflow-hidden ${
+        className={`flex-1 max-h-[calc(100vh-180px)] ${
           isSwipeActive ? "select-none" : ""
         }`}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
-        <div className="sm:hidden h-full flex flex-col justify-center space-y-4">
+        <div className="sm:hidden h-full flex flex-col justify-center space-y-0">
           {getCurrentProjects().map((project, index) => (
             <div key={`${currentPage}-${index}`} className="flex-1">
               <ProjectCard
@@ -185,7 +185,7 @@ export default function Home() {
       </div>
 
       {totalPages > 1 && (
-        <div className="flex-shrink-0 mt-3 sm:mt-4 pb-2">
+        <div className="flex-shrink-0 mt-auto sm:mt-auto">
           <div className="flex items-center justify-between">
             <div className="block sm:hidden text-xs text-gray-400">
               {t("projects.pagnation", {

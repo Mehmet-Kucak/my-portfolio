@@ -8,7 +8,11 @@ export function useResponsiveProjects() {
   useEffect(() => {
     const updateProjectsPerPage = () => {
       if (window.innerWidth < 640) {
-        setProjectsPerPage(1); // Mobile: 2 projects
+        if (window.innerHeight > 800) {
+          setProjectsPerPage(2);
+        } else {
+          setProjectsPerPage(1);
+        }
       } else if (window.innerWidth < 1024) {
         setProjectsPerPage(2);
       } else {

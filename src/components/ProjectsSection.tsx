@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useResponsiveProjects } from "@/hooks/useResponsiveProjects";
 import ProjectCard from "./ProjectCard";
 import { useTranslations } from "next-intl";
@@ -8,6 +8,16 @@ export default function Home() {
   const t = useTranslations("HomePage");
   const [currentPage, setCurrentPage] = useState(0);
   const projectsPerPage = useResponsiveProjects();
+  const [projects, setProjects] = useState<
+    {
+      title: string;
+      description: string;
+      image: string;
+      technologies: string[];
+      githubUrl: string;
+      liveUrl: string;
+    }[]
+  >([]);
 
   // Swipe handling state
   const [isSwipeActive, setIsSwipeActive] = useState(false);
@@ -16,118 +26,22 @@ export default function Home() {
   );
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const projects = [
-    {
-      title: "E-Commerce Platform",
-      description:
-        "Full-stack e-commerce solution with payment integration and admin dashboard",
-      image: "/photo.webp",
-      technologies: [
-        "React",
-        "Node.js",
-        "PostgreSQL",
-        "Stripe",
-        "Stripe",
-        "Stripe",
-        "Stripe",
-        "Stripe",
-        "Stripe",
-        "Stripe",
-      ],
-      githubUrl: "https://github.com/yourusername/project1",
-      liveUrl: "https://project1.vercel.app",
-    },
-    {
-      title: "Task Management App",
-      description:
-        "Collaborative task management tool with real-time updates and team features",
-      image: "/photo.webp",
-      technologies: ["Next.js", "TypeScript", "Prisma", "Supabase"],
-      githubUrl: "https://github.com/yourusername/project2",
-      liveUrl: "https://project2.vercel.app",
-    },
-    {
-      title: "Weather Dashboard",
-      description:
-        "Beautiful weather application with forecasts and location-based alerts",
-      image: "/photo.webp",
-      technologies: ["Vue.js", "Express", "Weather API"],
-      githubUrl: "https://github.com/yourusername/project3",
-      liveUrl: "https://project3.vercel.app",
-    },
-    {
-      title: "Social Media Analytics",
-      description:
-        "Analytics dashboard for social media metrics with data visualization",
-      image: "/photo.webp",
-      technologies: ["Python", "Django", "Chart.js", "Redis"],
-      githubUrl: "https://github.com/yourusername/project4",
-      liveUrl: "https://project4.herokuapp.com",
-    },
-    {
-      title: "Learning Management System",
-      description:
-        "Educational platform with course management and progress tracking",
-      image: "/photo.webp",
-      technologies: ["Angular", "Spring Boot", "MySQL"],
-      githubUrl: "https://github.com/yourusername/project5",
-      liveUrl: "https://project5.netlify.app",
-    },
-    {
-      title: "Real Estate Portal",
-      description:
-        "Property listing platform with search filters and virtual tours",
-      image: "/photo.webp",
-      technologies: ["Svelte", "FastAPI", "MongoDB"],
-      githubUrl: "https://github.com/yourusername/project6",
-      liveUrl: "https://project6.vercel.app",
-    },
-    {
-      title: "Real Estate Portal",
-      description:
-        "Property listing platform with search filters and virtual tours",
-      image: "/photo.webp",
-      technologies: ["Svelte", "FastAPI", "MongoDB"],
-      githubUrl: "https://github.com/yourusername/project6",
-      liveUrl: "https://project6.vercel.app",
-    },
-    {
-      title: "Real Estate Portal",
-      description:
-        "Property listing platform with search filters and virtual tours",
-      image: "/photo.webp",
-      technologies: ["Svelte", "FastAPI", "MongoDB"],
-      githubUrl: "https://github.com/yourusername/project6",
-      liveUrl: "https://project6.vercel.app",
-    },
-    {
-      title: "Real Estate Portal",
-      description:
-        "Property listing platform with search filters and virtual tours",
-      image: "/photo.webp",
-      technologies: ["Svelte", "FastAPI", "MongoDB"],
-      githubUrl: "https://github.com/yourusername/project6",
-      liveUrl: "https://project6.vercel.app",
-    },
-    {
-      title: "Real Estate Portal",
-      description:
-        "Property listing platform with search filters and virtual tours",
-      image: "/photo.webp",
-      technologies: ["Svelte", "FastAPI", "MongoDB"],
-      githubUrl: "https://github.com/yourusername/project6",
-      liveUrl: "https://project6.vercel.app",
-    },
-    {
-      title: "Real Estate Portal",
-      description:
-        "Property listing platform with search filters and virtual tours",
-      image: "/photo.webp",
-      technologies: ["Svelte", "FastAPI", "MongoDB"],
-      githubUrl: "https://github.com/yourusername/project6",
-      liveUrl: "https://project6.vercel.app",
-    },
-  ];
+  const PROJECT_AMOUNT = 4;
+  useEffect(() => {
+    const newArr = [];
+    for (let i = 1; i <= PROJECT_AMOUNT; i++) {
+      newArr.push({
+        title: t(`projects.project${i}.title`),
+        description: t(`projects.project${i}.description`),
+        image: t(`projects.project${i}.image`),
+        technologies: t(`projects.project${i}.technologies`).split("|"),
+        githubUrl: t(`projects.project${i}.githubUrl`),
+        liveUrl: t(`projects.project${i}.liveUrl`),
+      });
+    }
+
+    setProjects(newArr);
+  }, [t]);
 
   const totalPages = Math.ceil(projects.length / projectsPerPage);
 

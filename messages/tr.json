@@ -23,7 +23,41 @@
     "projects":{
       "title": "Projeler",
       "pagnation": "{currentPage}/{totalPages}",
-      "totalLength": "toplam {length} proje"
+      "totalLength": "toplam {length} proje",
+
+
+      "project1": {
+        "title": "Reddit Klonu Uygulama",
+        "description": "Kullanıcıların konu tabanlı topluluklar oluşturup katılabildiği, gerçek zamanlı güncellemeli dinamik bir topluluk platformu. Kullanıcı kimlik doğrulama, anlık içerik senkronizasyonu ve topluluklar, gönderiler ve profiller için temiz RESTful yönlendirme özellikleri içerir.",
+        "image": "projects/redditclone.webp",
+        "technologies": "Next.js|React|TypeScript|Tailwind CSS|Supabase|Supabase Auth",
+        "githubUrl": "https://github.com/Mehmet-Kucak/reddit_clone",
+        "liveUrl": "https://mehmetk-reddit-clone.vercel.app/"
+      },
+      "project2": {
+        "title": "Türk Yerel Mutfakları Mobil Uygulaması",
+        "description": "Gezginleri otantik Türk bölgesel yemekleriyle tanıştıran yapay zeka destekli mutfak keşif uygulaması. Konum tespiti, mutfak açıklamaları için OpenAI entegrasyonu ve yakındaki restoranları yorumlar ve puanlarla birlikte bulmak için Google Maps API kullanır.",
+        "image": "projects/gastrokesif.webp",
+        "technologies": "Next.js|React|Firebase|Google Maps API|OpenAI API|Python|Puppeteer",
+        "githubUrl": "https://github.com/Mehmet-Kucak/yemekci",
+        "liveUrl": "https://gastrokesif.vercel.app/en/"
+      },
+      "project3": {
+        "title": "Kişisel Portföy",
+        "description": "İnteraktif animasyonlar ve mobil optimize tasarım özellikli modern, iki dilli portföy web sitesi. Lazy loading, intersection observer'lar ve verimli durum yönetimi gibi performans optimizasyon teknikleriyle geliştirilmiştir.",
+        "image": "projects/portfolio.webp",
+        "technologies": "Next.js|React|TypeScript|Tailwind CSS|Framer Motion|Next-intl",
+        "githubUrl": "https://github.com/Mehmet-Kucak/my-portfolio",
+        "liveUrl": "https://mehmetkucak.com"
+      },
+      "project4": {
+        "title": "Conway'in Hayat Oyunu",
+        "description": "Conway'in Yaşam Oyunu hücresel otomatının interaktif uygulaması. Ayarlanabilir hız kontrolleri, fare tabanlı hücre çizimi ve adım adım yürütme ile gerçek zamanlı simülasyon özellikleri içerir.",
+        "image": "projects/gameoflife.webp",
+        "technologies": "Next.js|React|TypeScript",
+        "githubUrl": "https://github.com/Mehmet-Kucak/game-of-life",
+        "liveUrl": "https://game-of-life0.vercel.app/"
+      }
     }
   }
 }

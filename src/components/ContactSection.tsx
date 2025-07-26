@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { motion, scale } from "framer-motion";
+import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 
 const ContactSection = () => {
@@ -139,7 +139,7 @@ const ContactSection = () => {
         </div>
       </div>
 
-      <div className="relative w-full h-full flex flex-col justify-center px-2 sm:px-4 md:px-6 lg:px-8 py-8">
+      <div className="relative w-full h-full flex flex-col justify-center px-4 sm:px-8 md:px-12 lg:px-20 py-8">
         <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-2 text-center lg:text-left text-white">
           {t("contact.title")}
         </h2>
@@ -270,7 +270,7 @@ const ContactSection = () => {
               {t("contact.info.socials")}
             </h4>
             <div className="w-full h-fit flex space-x-4">
-              {socialLinks.map((social, index) => (
+              {socialLinks.map((social) => (
                 <motion.a
                   key={social.name}
                   href={social.url}

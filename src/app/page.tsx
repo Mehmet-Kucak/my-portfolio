@@ -3,6 +3,7 @@ import ChangingText from "@/components/ChangingText";
 import { useTranslations } from "next-intl";
 import { lazy, Suspense } from "react";
 import Image from "next/image";
+import ContactSection from "@/components/ContactSection";
 
 const LanguageSelector = lazy(() =>
   import("@/components/LangSelector").then((module) => ({
@@ -55,7 +56,7 @@ export default function Home() {
         </Suspense>
         <div className="relative flex flex-col lg:flex-row items-center justify-center h-full w-full px-4 sm:px-8 md:px-12 lg:px-20 py-8 lg:py-0">
           <div className="text-center mt-10 lg:text-left lg:mb-0 lg:flex-1">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight">
+            <h1 className="  font-extrabold text-white leading-tight">
               {t("hero.title")}
             </h1>
             <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-white mt-2 lg:mt-0">
@@ -85,7 +86,7 @@ export default function Home() {
           />
         </Suspense>
         <div className="w-full h-full flex flex-col justify-center px-4 sm:px-8 md:px-12 lg:px-20 py-8">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-6 text-center lg:text-left">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-6 text-center lg:text-left">
             {t("about.title")}
           </h2>
           <div className="w-full text-sm sm:text-base lg:text-lg">
@@ -376,6 +377,11 @@ export default function Home() {
         className="relative snap-section w-screen h-screen"
       >
         <ProjectsSection />
+        <ScrollDownIndicator targetId="contact" />
+      </section>
+
+      <section id="contact" className="relative snap-section w-screen h-screen">
+        <ContactSection />
       </section>
     </main>
   );

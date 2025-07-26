@@ -1,8 +1,10 @@
 "use client";
 import React, { useState } from "react";
 import { motion, scale } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 const ContactSection = () => {
+  const t = useTranslations("HomePage");
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -139,14 +141,14 @@ const ContactSection = () => {
 
       <div className="relative w-full h-full flex flex-col justify-center px-2 sm:px-4 md:px-6 lg:px-8 py-8">
         <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-2 text-center lg:text-left text-white">
-          Get In Touch
+          {t("contact.title")}
         </h2>
 
         <div className="w-full h-full flex flex-col lg:flex-row gap-4 max-w-7xl mx-auto">
           {/* Left side - Contact Info & Social Links */}
           <div className="lg:w-1/2 h-full flex flex-col gap-4 bg-white/ 5 backdrop-blur-sm rounded-2xl p-3 lg:p-6 border border-gray-700/50">
             <h3 className="text-xl lg:text-2xl font-bold text-white">
-              Contact Information
+              {t("contact.info.title")}
             </h3>
 
             <div className="w-full flex items-center bg-gray-800/50 border border-gray-600/50 rounded-xl text-lg text-white p-4 gap-4">
@@ -173,7 +175,7 @@ const ContactSection = () => {
                 </svg>
               </motion.a>
               <div className="h-full flex flex-col justify-start  leading-none gap-1">
-                <h3>Email</h3>
+                <h3>{t("contact.info.email")}</h3>
                 <p className="font-extralight text-sm md:text-base">
                   mehmetkucak07@gmail.com
                 </p>
@@ -234,7 +236,7 @@ const ContactSection = () => {
                 </svg>
               </motion.a>
               <div className="h-full flex flex-col justify-start  leading-none gap-1">
-                <h3>Location</h3>
+                <h3>{t("contact.info.location")}</h3>
                 <p className="font-extralight">Aydın, Türkiye</p>
               </div>
               <motion.button
@@ -265,7 +267,7 @@ const ContactSection = () => {
             </div>
 
             <h4 className="text-base font-regular text-white mt-auto">
-              Connect With Me
+              {t("contact.info.socials")}
             </h4>
             <div className="w-full h-fit flex space-x-4">
               {socialLinks.map((social, index) => (
@@ -286,7 +288,7 @@ const ContactSection = () => {
           {/* Right side - Contact Form */}
           <div className="lg:w-1/2 h-full hidden md:flex flex-col gap-4 bg-white/ 5 backdrop-blur-sm rounded-2xl p-3 lg:p-6 border border-gray-700/50">
             <h3 className="text-xl lg:text-2xl font-bold text-white mb-2">
-              Send Me a Message
+              {t("contact.send.title")}
             </h3>
 
             <form onSubmit={handleSubmit} className="space-y-2">
@@ -296,7 +298,7 @@ const ContactSection = () => {
                     htmlFor="name"
                     className="block text-sm font-medium text-gray-300 mb-2"
                   >
-                    Name
+                    {t("contact.send.name.title")}
                   </label>
                   <div className="flex justify-center items-center gap-2 w-full px-2 py-3 bg-gray-800/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus-within:ring-2 focus-within:ring-blue-500/50 focus-within:border-blue-500/50 transition-all duration-200">
                     <svg
@@ -323,7 +325,7 @@ const ContactSection = () => {
                       onChange={handleInputChange}
                       required
                       className="grow leading-0 focus:outline-none bg-transparent"
-                      placeholder="Your name"
+                      placeholder={t("contact.send.name.placeholder")}
                     />
                   </div>
                 </div>
@@ -333,7 +335,7 @@ const ContactSection = () => {
                     htmlFor="email"
                     className="block text-sm font-medium text-gray-300 mb-2"
                   >
-                    Email
+                    {t("contact.send.email.title")}
                   </label>
                   <div className="flex justify-center items-center gap-2 w-full px-2 py-3 bg-gray-800/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus-within:ring-2 focus-within:ring-blue-500/50 focus-within:border-blue-500/50 transition-all duration-200">
                     <svg
@@ -360,7 +362,7 @@ const ContactSection = () => {
                       onChange={handleInputChange}
                       required
                       className="grow leading-0 focus:outline-none bg-transparent"
-                      placeholder="your@email.com"
+                      placeholder={t("contact.send.email.placeholder")}
                     />
                   </div>
                 </div>
@@ -371,7 +373,7 @@ const ContactSection = () => {
                   htmlFor="subject"
                   className="block text-sm font-medium text-gray-300 mb-2"
                 >
-                  Subject
+                  {t("contact.send.subject.title")}
                 </label>
                 <div className="flex justify-center items-center gap-2 w-full px-2 py-3 bg-gray-800/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus-within:ring-2 focus-within:ring-blue-500/50 focus-within:border-blue-500/50 transition-all duration-200">
                   <svg
@@ -401,7 +403,7 @@ const ContactSection = () => {
                     onChange={handleInputChange}
                     required
                     className="grow leading-0 focus:outline-none bg-transparent"
-                    placeholder="What's this about?"
+                    placeholder={t("contact.send.subject.placeholder")}
                   />
                 </div>
               </div>
@@ -411,7 +413,7 @@ const ContactSection = () => {
                   htmlFor="message"
                   className="block text-sm font-medium text-gray-300 mb-2"
                 >
-                  Message
+                  {t("contact.send.message.title")}
                 </label>
                 <textarea
                   id="message"
@@ -421,7 +423,7 @@ const ContactSection = () => {
                   required
                   rows={5}
                   className="w-full px-4 py-3 bg-gray-800/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-200 resize-none"
-                  placeholder="Tell me about your project..."
+                  placeholder={t("contact.send.message.placeholder")}
                 />
               </div>
 
@@ -438,7 +440,9 @@ const ContactSection = () => {
                   {isSubmitting ? (
                     <div className="flex items-center justify-center space-x-2">
                       <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                      <span className="h-fit">Sending...</span>
+                      <span className="h-fit">
+                        {t("contact.send.sendLoading")}
+                      </span>
                     </div>
                   ) : (
                     <>
@@ -458,7 +462,9 @@ const ContactSection = () => {
                         <path d="M10 14l11 -11" />
                         <path d="M21 3l-6.5 18a.55 .55 0 0 1 -1 0l-3.5 -7l-7 -3.5a.55 .55 0 0 1 0 -1l18 -6.5" />
                       </svg>
-                      <span className="h-fit">Send Message</span>
+                      <span className="h-fit">
+                        {t("contact.send.sendButton")}
+                      </span>
                     </>
                   )}
                 </motion.button>
@@ -489,9 +495,7 @@ const ContactSection = () => {
                     <path d="M6.907 4.579a8.954 8.954 0 0 1 3.093 -1.356" />
                     <path d="M9 12l2 2l4 -4" />
                   </svg>
-                  <span className="h-fit">
-                    Message sent successfully! I'll get back to you soon.
-                  </span>
+                  <span className="h-fit">{t("contact.send.sendSuccess")}</span>
                 </motion.div>
               )}
               {submitStatus === "error" && (
@@ -521,9 +525,7 @@ const ContactSection = () => {
                     <path d="M14 14l-4 -4" />
                     <path d="M10 14l4 -4" />
                   </svg>
-                  <span className="h-fit">
-                    Oops! Something went wrong. Please try again.
-                  </span>
+                  <span className="h-fit">{t("contact.send.sendError")}</span>
                 </motion.div>
               )}
             </form>

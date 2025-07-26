@@ -58,6 +58,38 @@
         "githubUrl": "https://github.com/Mehmet-Kucak/game-of-life",
         "liveUrl": "https://game-of-life0.vercel.app/"
       }
+    },
+    "contact":{
+      "title": "İletişim",
+      "info": {
+        "title": "İletişim Bilgileri",
+        "email": "E-posta",
+        "location": "Konum",
+        "socials": "Sosyal Medya"
+      },
+      "send":{
+        "title": "Bana Mesaj Gönder",
+        "name": {
+          "title": "Ad",
+          "placeholder": "Adınız"
+        },
+        "email": {
+          "title": "E-posta",
+          "placeholder": "isim@eposta.com"
+        },
+        "subject": {
+          "title": "Konu",
+          "placeholder": "Mesaj konusu"
+        },
+        "message": {
+          "title": "Mesaj",
+          "placeholder": "Mesajınızı buraya yazın..."
+        },
+        "sendButton": "Mesaj Gönder",
+        "sendLoading": "Gönderiliyor...",
+        "sendSuccess": "Mesaj başarıyla gönderildi! En kısa sürede size dönüş yapacağım.",
+        "sendError": "Bir şeyler ters gitti. Lütfen tekrar deneyin."
+      }
     }
   }
 }

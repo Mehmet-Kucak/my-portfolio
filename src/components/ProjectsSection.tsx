@@ -128,7 +128,7 @@ export default function Home() {
   return (
     <div className="w-full h-full flex flex-col px-4 sm:px-8 md:px-12 lg:px-20 py-4 sm:py-6">
       <div className="flex items-center justify-between mb-3 sm:mb-4 flex-shrink-0">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-center lg:text-left">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-center lg:text-left mx-auto lg:mx-0">
           {t("projects.title")}
         </h2>
         <div className="hidden sm:flex items-center text-sm text-gray-400">

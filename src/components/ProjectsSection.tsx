@@ -21,7 +21,6 @@ export default function ProjectsSection() {
   const projectsPerPage = useResponsiveProjects();
   const [projects, setProjects] = useState<Project[]>([]);
 
-  // Swipe handling state
   const [isSwipeActive, setIsSwipeActive] = useState(false);
   const touchStartRef = useRef<{ x: number; y: number; time: number } | null>(
     null
@@ -31,7 +30,6 @@ export default function ProjectsSection() {
 
   const PROJECT_AMOUNT = 4;
 
-  // Load projects with error handling
   useEffect(() => {
     try {
       const newArr: Project[] = [];
@@ -47,7 +45,6 @@ export default function ProjectsSection() {
           liveUrl: t(`projects.project${i}.liveUrl`),
         };
 
-        // Validate project data
         if (project.title && project.description) {
           newArr.push(project);
         }
@@ -95,7 +92,6 @@ export default function ProjectsSection() {
     [totalPages]
   );
 
-  // Keyboard navigation for pagination
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
       if (totalPages <= 1) return;
@@ -122,7 +118,6 @@ export default function ProjectsSection() {
     [nextPage, prevPage, goToPage, totalPages]
   );
 
-  // Enhanced touch handlers with better gesture detection
   const handleTouchStart = useCallback(
     (e: React.TouchEvent) => {
       if (e.touches.length !== 1 || totalPages <= 1) return;
@@ -147,7 +142,6 @@ export default function ProjectsSection() {
       const deltaX = touch.clientX - touchStartRef.current.x;
       const deltaY = touch.clientY - touchStartRef.current.y;
 
-      // Enhanced swipe detection
       const isHorizontalSwipe =
         Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 30;
 
@@ -196,6 +190,16 @@ export default function ProjectsSection() {
       setIsSwipeActive(false);
     },
     [nextPage, prevPage, totalPages]
+  );
+
+  const generateProjectId = useCallback(
+    (title: string, index: number) => {
+      return `project-${title
+        .toLowerCase()
+        .replace(/\s+/g, "-")
+        .replace(/[^a-z0-9-]/g, "")}-${currentPage}-${index}`;
+    },
+    [currentPage]
   );
 
   // Loading state
@@ -291,15 +295,36 @@ export default function ProjectsSection() {
       aria-labelledby="projects-heading"
       onKeyDown={handleKeyDown}
       tabIndex={-1}
+      itemScope
+      itemType="https://schema.org/CreativeWork"
     >
       {/* Header */}
       <header className="flex items-center justify-between mb-3 sm:mb-4 flex-shrink-0">
         <h1
           id="projects-heading"
           className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-center lg:text-left mx-auto lg:mx-0 font-bold text-white"
+          itemProp="name"
         >
           {t("projects.title")}
         </h1>
+
+        {/* Hidden microdata for portfolio */}
+        <div style={{ display: "none" }}>
+          <span itemProp="description">
+            A comprehensive collection of full-stack web development projects
+          </span>
+          <span
+            itemProp="author"
+            itemScope
+            itemType="https://schema.org/Person"
+          >
+            <span itemProp="name">Mehmet Kucak</span>
+            <span itemProp="url">https://mehmetkucak.com</span>
+          </span>
+          <span itemProp="genre">Web Development Portfolio</span>
+          <span itemProp="inLanguage">en</span>
+          <span itemProp="inLanguage">tr</span>
+        </div>
 
         {totalPages > 1 && (
           <div className="hidden sm:flex items-center text-sm text-gray-400">
@@ -325,40 +350,81 @@ export default function ProjectsSection() {
         role="region"
         aria-label={`Projects page ${currentPage + 1} of ${totalPages}`}
         aria-live="polite"
+        itemProp="mainEntity"
+        itemScope
+        itemType="https://schema.org/ItemList"
       >
         {/* Mobile Layout */}
-        <div className="sm:hidden h-full flex flex-col justify-center space-y-4">
-          {getCurrentProjects().map((project, index) => (
-            <div key={`${currentPage}-${index}`} className="flex-1 min-h-0">
-              <ProjectCard
-                title={project.title}
-                description={project.description}
-                image={project.image}
-                technologies={project.technologies}
-                githubUrl={project.githubUrl}
-                liveUrl={project.liveUrl}
-                index={index}
-              />
-            </div>
-          ))}
+        <div className="block sm:hidden h-full">
+          <div className="h-full grid grid-cols-1 gap-4 md:gap-6 lg:gap-8">
+            {getCurrentProjects().map((project, index) => (
+              <div
+                key={`${currentPage}-${index}`}
+                itemProp="itemListElement"
+                itemScope
+                itemType="https://schema.org/ListItem"
+                className="h-full w-full"
+              >
+                <span itemProp="position" style={{ display: "none" }}>{`${
+                  currentPage * projectsPerPage + index + 1
+                }`}</span>
+                <div itemProp="item" className="h-full w-full">
+                  <ProjectCard
+                    title={project.title}
+                    description={project.description}
+                    image={project.image}
+                    technologies={project.technologies}
+                    githubUrl={project.githubUrl}
+                    liveUrl={project.liveUrl}
+                    index={index}
+                    injectStructuredData={true}
+                    projectId={generateProjectId(project.title, index)}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Desktop Layout */}
         <div className="hidden sm:block h-full">
           <div className="h-full grid grid-cols-2 gap-4 md:gap-6 lg:gap-8">
             {getCurrentProjects().map((project, index) => (
-              <ProjectCard
+              <div
                 key={`${currentPage}-${index}`}
-                title={project.title}
-                description={project.description}
-                image={project.image}
-                technologies={project.technologies}
-                githubUrl={project.githubUrl}
-                liveUrl={project.liveUrl}
-                index={index}
-              />
+                itemProp="itemListElement"
+                itemScope
+                itemType="https://schema.org/ListItem"
+                className="h-full w-full"
+              >
+                <span itemProp="position" style={{ display: "none" }}>{`${
+                  currentPage * projectsPerPage + index + 1
+                }`}</span>
+                <div itemProp="item" className="h-full w-full">
+                  <ProjectCard
+                    title={project.title}
+                    description={project.description}
+                    image={project.image}
+                    technologies={project.technologies}
+                    githubUrl={project.githubUrl}
+                    liveUrl={project.liveUrl}
+                    index={index}
+                    injectStructuredData={true}
+                    projectId={generateProjectId(project.title, index)}
+                  />
+                </div>
+              </div>
             ))}
           </div>
+        </div>
+
+        {/* Hidden microdata for ItemList */}
+        <div style={{ display: "none" }}>
+          <span itemProp="name">Portfolio Projects</span>
+          <span itemProp="description">
+            Collection of web development projects
+          </span>
+          <span itemProp="numberOfItems">{projects.length}</span>
         </div>
       </div>
 

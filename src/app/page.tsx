@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { lazy, Suspense } from "react";
 import ScrollDownIndicator from "@/components/ScrollDown";
 import LanguageSelector from "@/components/LangSelector";
+import StructuredData from "@/components/StructuredData";
 import Image from "next/image";
 
 const AnimatedIconBg = lazy(() =>
@@ -201,209 +202,220 @@ export default function Home() {
   }
 
   return (
-    <main className="snap-container">
-      {/* Skip to content link for screen readers */}
-      <a
-        href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-blue-600 text-white px-4 py-2 rounded z-50"
-      >
-        Skip to main content
-      </a>
-
-      {/* Hero Section */}
-      <section
-        id="home"
-        className="snap-section w-screen h-screen relative"
-        aria-labelledby="hero-title"
-      >
-        <div className="absolute top-2 right-2 sm:top-4 sm:right-4 z-50">
-          <LanguageSelector />
-        </div>
-        <Suspense fallback={null}>
-          <AnimatedGridBg />
-        </Suspense>
-        <div
-          id="main-content"
-          className="relative flex flex-col lg:flex-row items-center justify-center h-full w-full px-4 sm:px-8 md:px-12 lg:px-20 py-8 lg:py-0"
+    <>
+      <StructuredData />
+      <main className="snap-container">
+        {/* Skip to content link for screen readers */}
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-blue-600 text-white px-4 py-2 rounded z-50"
         >
-          <div className="text-center mt-10 lg:text-left lg:mb-0 lg:flex-1">
-            <h1
-              id="hero-title"
-              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight"
+          Skip to main content
+        </a>
+
+        {/* Hero Section */}
+        <section
+          id="home"
+          className="snap-section w-screen h-screen relative"
+          aria-labelledby="hero-title"
+        >
+          <div className="absolute top-2 right-2 sm:top-4 sm:right-4 z-50">
+            <LanguageSelector />
+          </div>
+          <Suspense fallback={null}>
+            <AnimatedGridBg />
+          </Suspense>
+          <div
+            id="main-content"
+            className="relative flex flex-col lg:flex-row items-center justify-center h-full w-full px-4 sm:px-8 md:px-12 lg:px-20 py-8 lg:py-0"
+          >
+            <div className="text-center mt-10 lg:text-left lg:mb-0 lg:flex-1">
+              <h1
+                id="hero-title"
+                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight"
+              >
+                {t("hero.title")}
+              </h1>
+              <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-white mt-2 lg:mt-0">
+                {t("hero.subTitle")}
+                <ChangingText aria-live="polite">
+                  {t("hero.roles")}
+                </ChangingText>
+              </h1>
+              <p className="mt-4 text-base sm:text-lg lg:text-xl text-gray-300 max-w-xl mx-auto lg:mx-0">
+                {t("hero.description")}
+              </p>
+            </div>
+
+            <div
+              className="flex-shrink-0 lg:h-full  mb-8 lg:mb-0"
+              role="img"
+              aria-label="Profile photo"
             >
-              {t("hero.title")}
-            </h1>
-            <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-white mt-2 lg:mt-0">
-              {t("hero.subTitle")}
-              <ChangingText aria-live="polite">{t("hero.roles")}</ChangingText>
-            </h1>
-            <p className="mt-4 text-base sm:text-lg lg:text-xl text-gray-300 max-w-xl mx-auto lg:mx-0">
-              {t("hero.description")}
-            </p>
-          </div>
-
-          <div
-            className="flex-shrink-0 lg:h-full  mb-8 lg:mb-0"
-            role="img"
-            aria-label="Profile photo"
-          >
-            <BlobImage src="/photo.webp" alt="Profile photo" priority={true} />
-          </div>
-        </div>
-        <ScrollDownIndicator
-          targetId="about"
-          aria-label="Scroll to about section"
-        />
-      </section>
-
-      {/* About Section */}
-      <section
-        id="about"
-        className="relative snap-section w-screen h-screen flex items-center"
-        aria-labelledby="about-title"
-      >
-        <Suspense fallback={null}>
-          <AnimatedIconBg
-            iconType="section1"
-            iconFilter="invert(100%) brightness(0.1)"
-            aria-hidden="true"
-          />
-        </Suspense>
-        <div className="w-full h-full flex flex-col justify-center px-4 sm:px-8 md:px-12 lg:px-20 py-8">
-          <h2
-            id="about-title"
-            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-6 text-center lg:text-left"
-          >
-            {t("about.title")}
-          </h2>
-
-          <div
-            className="w-full text-sm sm:text-base lg:text-lg"
-            role="region"
-            aria-labelledby="about-section"
-          >
-            {/* Mobile Layout */}
-            <div className="flex flex-col lg:hidden space-y-6">
-              <p className="bg-white/5 backdrop-blur-xs p-2 rounded-2xl">
-                {t("about.content1", { age: currentAge })}
-              </p>
-              <p className="bg-white/5 backdrop-blur-xs p-2 rounded-2xl">
-                {t("about.content2")}
-              </p>
-              <p className="bg-white/5 backdrop-blur-xs p-2 rounded-2xl">
-                {t("about.content3")}
-              </p>
-              <p className="bg-white/5 backdrop-blur-xs p-2 rounded-2xl">
-                {t("about.content4")}
-              </p>
-            </div>
-
-            {/* Desktop Layout */}
-            <div className="hidden lg:flex justify-between items-stretch gap-6 xl:gap-10">
-              <p className="flex-1 bg-white/5 backdrop-blur-xs p-2 rounded-2xl">
-                {t("about.content1", { age: new Date().getFullYear() - 2007 })}
-              </p>
-              <p className="flex-1 bg-white/5 backdrop-blur-xs p-2 rounded-2xl">
-                {t("about.content2")}
-              </p>
-              <p className="flex-1 bg-white/5 backdrop-blur-xs p-2 rounded-2xl">
-                {t("about.content3")}
-              </p>
-              <p className="flex-1 bg-white/5 backdrop-blur-xs p-2 rounded-2xl">
-                {t("about.content4")}
-              </p>
+              <BlobImage
+                src="/photo.webp"
+                alt="Profile photo"
+                priority={true}
+              />
             </div>
           </div>
-        </div>
-        <ScrollDownIndicator
-          targetId="tech"
-          aria-label="Scroll to technology section"
-        />
-      </section>
-
-      {/* Technology Section */}
-      <section
-        id="tech"
-        className="relative snap-section w-screen h-screen flex items-center"
-        aria-labelledby="tech-title"
-      >
-        <Suspense fallback={null}>
-          <AnimatedIconBg
-            iconType="section2"
-            iconFilter="invert(100%) brightness(0.1)"
-            aria-hidden="true"
+          <ScrollDownIndicator
+            targetId="about"
+            aria-label="Scroll to about section"
           />
-        </Suspense>
+        </section>
 
-        <div className="w-full h-full flex flex-col justify-center px-4 sm:px-8 md:px-12 lg:px-20 py-8">
-          <h2
-            id="tech-title"
-            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-2 sm:mb-3 text-center lg:text-left"
-          >
-            {t("tech.title")}
-          </h2>
-          <Suspense fallback={<LoadingFallback className="w-full h-64" />}>
-            <Tabs
-              className=""
-              items={[
-                {
-                  id: "frontend",
-                  label: t("tech.subtitle1"),
-                  content: renderTechCards(techStacks.frontend),
-                },
-                {
-                  id: "backend",
-                  label: t("tech.subtitle2"),
-                  content: renderTechCards(techStacks.backend),
-                },
-                {
-                  id: "databases",
-                  label: t("tech.subtitle3"),
-                  content: renderTechCards(techStacks.databases),
-                },
-                {
-                  id: "cloud-devops",
-                  label: t("tech.subtitle4"),
-                  content: renderTechCards(techStacks.cloudDevops),
-                },
-              ]}
-              defaultTab={"frontend"}
-              aria-labelledby="tech-title"
+        {/* About Section */}
+        <section
+          id="about"
+          className="relative snap-section w-screen h-screen flex items-center"
+          aria-labelledby="about-title"
+        >
+          <Suspense fallback={null}>
+            <AnimatedIconBg
+              iconType="section1"
+              iconFilter="invert(100%) brightness(0.1)"
+              aria-hidden="true"
             />
           </Suspense>
-        </div>
+          <div className="w-full h-full flex flex-col justify-center px-4 sm:px-8 md:px-12 lg:px-20 py-8">
+            <h2
+              id="about-title"
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-6 text-center lg:text-left"
+            >
+              {t("about.title")}
+            </h2>
 
-        <ScrollDownIndicator
-          targetId="projects"
-          aria-label="Scroll to projects section"
-        />
-      </section>
+            <div
+              className="w-full text-sm sm:text-base lg:text-lg"
+              role="region"
+              aria-labelledby="about-section"
+            >
+              {/* Mobile Layout */}
+              <div className="flex flex-col lg:hidden space-y-6">
+                <p className="bg-white/5 backdrop-blur-xs p-2 rounded-2xl">
+                  {t("about.content1", { age: currentAge })}
+                </p>
+                <p className="bg-white/5 backdrop-blur-xs p-2 rounded-2xl">
+                  {t("about.content2")}
+                </p>
+                <p className="bg-white/5 backdrop-blur-xs p-2 rounded-2xl">
+                  {t("about.content3")}
+                </p>
+                <p className="bg-white/5 backdrop-blur-xs p-2 rounded-2xl">
+                  {t("about.content4")}
+                </p>
+              </div>
 
-      {/* Project Section */}
-      <section
-        id="projects"
-        className="relative snap-section w-screen h-screen"
-        aria-labelledby="projects-title"
-      >
-        <Suspense fallback={<LoadingFallback className="w-full h-full" />}>
-          <ProjectsSection />
-        </Suspense>
-        <ScrollDownIndicator
-          targetId="contact"
-          aria-label="Scroll to contact section"
-        />
-      </section>
+              {/* Desktop Layout */}
+              <div className="hidden lg:flex justify-between items-stretch gap-6 xl:gap-10">
+                <p className="flex-1 bg-white/5 backdrop-blur-xs p-2 rounded-2xl">
+                  {t("about.content1", {
+                    age: new Date().getFullYear() - 2007,
+                  })}
+                </p>
+                <p className="flex-1 bg-white/5 backdrop-blur-xs p-2 rounded-2xl">
+                  {t("about.content2")}
+                </p>
+                <p className="flex-1 bg-white/5 backdrop-blur-xs p-2 rounded-2xl">
+                  {t("about.content3")}
+                </p>
+                <p className="flex-1 bg-white/5 backdrop-blur-xs p-2 rounded-2xl">
+                  {t("about.content4")}
+                </p>
+              </div>
+            </div>
+          </div>
+          <ScrollDownIndicator
+            targetId="tech"
+            aria-label="Scroll to technology section"
+          />
+        </section>
 
-      {/* About Section */}
-      <section
-        id="contact"
-        className="relative snap-section w-screen h-screen"
-        aria-labelledby="contact-title"
-      >
-        <Suspense fallback={<LoadingFallback className="w-full h-full" />}>
-          <ContactSection />
-        </Suspense>
-      </section>
-    </main>
+        {/* Technology Section */}
+        <section
+          id="tech"
+          className="relative snap-section w-screen h-screen flex items-center"
+          aria-labelledby="tech-title"
+        >
+          <Suspense fallback={null}>
+            <AnimatedIconBg
+              iconType="section2"
+              iconFilter="invert(100%) brightness(0.1)"
+              aria-hidden="true"
+            />
+          </Suspense>
+
+          <div className="w-full h-full flex flex-col justify-center px-4 sm:px-8 md:px-12 lg:px-20 py-8">
+            <h2
+              id="tech-title"
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-2 sm:mb-3 text-center lg:text-left"
+            >
+              {t("tech.title")}
+            </h2>
+            <Suspense fallback={<LoadingFallback className="w-full h-64" />}>
+              <Tabs
+                className=""
+                items={[
+                  {
+                    id: "frontend",
+                    label: t("tech.subtitle1"),
+                    content: renderTechCards(techStacks.frontend),
+                  },
+                  {
+                    id: "backend",
+                    label: t("tech.subtitle2"),
+                    content: renderTechCards(techStacks.backend),
+                  },
+                  {
+                    id: "databases",
+                    label: t("tech.subtitle3"),
+                    content: renderTechCards(techStacks.databases),
+                  },
+                  {
+                    id: "cloud-devops",
+                    label: t("tech.subtitle4"),
+                    content: renderTechCards(techStacks.cloudDevops),
+                  },
+                ]}
+                defaultTab={"frontend"}
+                aria-labelledby="tech-title"
+              />
+            </Suspense>
+          </div>
+
+          <ScrollDownIndicator
+            targetId="projects"
+            aria-label="Scroll to projects section"
+          />
+        </section>
+
+        {/* Project Section */}
+        <section
+          id="projects"
+          className="relative snap-section w-screen h-screen"
+          aria-labelledby="projects-title"
+        >
+          <Suspense fallback={<LoadingFallback className="w-full h-full" />}>
+            <ProjectsSection />
+          </Suspense>
+          <ScrollDownIndicator
+            targetId="contact"
+            aria-label="Scroll to contact section"
+          />
+        </section>
+
+        {/* About Section */}
+        <section
+          id="contact"
+          className="relative snap-section w-screen h-screen"
+          aria-labelledby="contact-title"
+        >
+          <Suspense fallback={<LoadingFallback className="w-full h-full" />}>
+            <ContactSection />
+          </Suspense>
+        </section>
+      </main>
+    </>
   );
 }

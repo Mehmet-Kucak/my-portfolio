@@ -1,7 +1,8 @@
 "use client";
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { generateProjectSchema, ProjectData } from "@/lib/structured-data";
 
 interface ProjectCardProps {
   title: string;
@@ -11,6 +12,8 @@ interface ProjectCardProps {
   githubUrl?: string;
   liveUrl?: string;
   index: number;
+  injectStructuredData?: boolean;
+  projectId?: string;
 }
 
 export default function ProjectCard({
@@ -21,9 +24,66 @@ export default function ProjectCard({
   githubUrl,
   liveUrl,
   index,
+  injectStructuredData = false,
+  projectId,
 }: ProjectCardProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [imageError, setImageError] = useState(false);
+
+  useEffect(() => {
+    if (injectStructuredData && projectId && githubUrl && liveUrl) {
+      try {
+        const projectData: ProjectData = {
+          title,
+          description,
+          image,
+          technologies,
+          githubUrl,
+          liveUrl,
+          dateCreated: "2024-01-01",
+          category: "Web Application",
+        };
+
+        const schema = generateProjectSchema(projectData);
+
+        const existingScript = document.getElementById(
+          `project-schema-${projectId}`
+        );
+        if (existingScript) {
+          existingScript.remove();
+        }
+
+        const script = document.createElement("script");
+        script.id = `project-schema-${projectId}`;
+        script.type = "application/ld+json";
+        script.textContent = JSON.stringify(schema, null, 2);
+        document.head.appendChild(script);
+      } catch (error) {
+        console.warn(
+          `Failed to inject structured data for project ${title}:`,
+          error
+        );
+      }
+
+      return () => {
+        const scriptToRemove = document.getElementById(
+          `project-schema-${projectId}`
+        );
+        if (scriptToRemove) {
+          scriptToRemove.remove();
+        }
+      };
+    }
+  }, [
+    injectStructuredData,
+    projectId,
+    title,
+    description,
+    image,
+    technologies,
+    githubUrl,
+    liveUrl,
+  ]);
 
   const isValidImageUrl = useCallback((url: string) => {
     if (!url || typeof url !== "string" || url.trim() === "") {
@@ -32,10 +92,8 @@ export default function ProjectCard({
 
     try {
       const parsedUrl = new URL(url.trim());
-      // Check if it's a valid HTTP/HTTPS URL
       return parsedUrl.protocol === "http:" || parsedUrl.protocol === "https:";
     } catch {
-      // If it's a relative path or Next.js static asset, it's probably valid
       return (
         url.startsWith("/") || url.startsWith("./") || url.startsWith("../")
       );
@@ -62,7 +120,6 @@ export default function ProjectCard({
     (e: React.MouseEvent, url: string) => {
       e.stopPropagation();
       if (isValidUrl(url)) {
-        // Analytics tracking could be added here
         window.open(url, "_blank", "noopener,noreferrer");
       } else {
         console.warn("Invalid URL provided:", url);
@@ -92,7 +149,7 @@ export default function ProjectCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{
         duration: 0.6,
-        delay: Math.min(index * 0.1, 0.5), // Cap animation delay
+        delay: Math.min(index * 0.1, 0.5),
         ease: [0.23, 1, 0.32, 1],
       }}
       onHoverStart={() => setIsHovered(true)}
@@ -101,6 +158,8 @@ export default function ProjectCard({
       role="article"
       aria-labelledby={`project-title-${index}`}
       aria-describedby={`project-description-${index}`}
+      itemScope
+      itemType="https://schema.org/SoftwareApplication"
     >
       <div className="relative w-full h-full min-h-[280px] max-h-[400px] sm:min-h-[320px] sm:max-h-[450px] lg:min-h-[360px] lg:max-h-[500px] bg-gradient-to-br from-gray-900/90 to-gray-800/70 backdrop-blur-sm rounded-2xl border border-gray-700/50 overflow-hidden shadow-2xl hover:shadow-blue-500/10 transition-all duration-300">
         {/* Image Container */}
@@ -110,8 +169,8 @@ export default function ProjectCard({
               src={validImageSrc}
               alt={`Screenshot of ${title} project`}
               fill
-              sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-              className="object-cover transition-transform duration-400 ease-out"
+              sizes="100%"
+              className="w-full h-full object-cover transition-transform duration-400 ease-out"
               style={{
                 transform: isHovered ? "scale(1.1)" : "scale(1)",
               }}
@@ -120,6 +179,7 @@ export default function ProjectCard({
               loading={index < 2 ? "eager" : "lazy"}
               placeholder="blur"
               blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyuwjA"
+              itemProp="screenshot image"
             />
           ) : (
             // Enhanced fallback for broken/invalid images
@@ -214,21 +274,60 @@ export default function ProjectCard({
           </motion.div>
         </div>
 
-        {/* Content */}
-        <div className="flex flex-col justify-between h-3/5 p-4 sm:p-5 lg:p-6">
-          <div>
+        <div className="h-3/5 flex flex-col justify-between flex-1 p-4 sm:p-5 lg:p-6">
+          <div className="grow">
             <h3
               id={`project-title-${index}`}
               className="text-base sm:text-lg lg:text-xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors duration-200 line-clamp-1"
+              itemProp="name"
             >
               {title}
             </h3>
             <p
               id={`project-description-${index}`}
               className="text-xs sm:text-sm text-gray-300 mb-2 line-clamp-3 leading-relaxed"
+              itemProp="description"
             >
               {description}
             </p>
+
+            {/* Hidden microdata elements */}
+            <div style={{ display: "none" }}>
+              <span itemProp="applicationCategory">WebApplication</span>
+              <span itemProp="operatingSystem">Web Browser</span>
+              <span itemProp="softwareVersion">1.0.0</span>
+              <span
+                itemProp="author"
+                itemScope
+                itemType="https://schema.org/Person"
+              >
+                <span itemProp="name">Mehmet Kucak</span>
+                <span itemProp="url">https://mehmetkucak.com</span>
+              </span>
+              {liveUrl && (
+                <a href={liveUrl} itemProp="url installUrl">
+                  {liveUrl}
+                </a>
+              )}
+              {githubUrl && (
+                <a href={githubUrl} itemProp="codeRepository downloadUrl">
+                  {githubUrl}
+                </a>
+              )}
+              <span
+                itemProp="offers"
+                itemScope
+                itemType="https://schema.org/Offer"
+              >
+                <span itemProp="price">0</span>
+                <span itemProp="priceCurrency">USD</span>
+              </span>
+              {technologies.map((tech, i) => (
+                <span key={i} itemProp="featureList">
+                  {tech}
+                </span>
+              ))}
+            </div>
           </div>
 
           <div>
@@ -243,6 +342,7 @@ export default function ProjectCard({
                   key={`${tech}-${techIndex}`}
                   role="listitem"
                   className="px-2 py-1 text-xs bg-gray-700/60 text-gray-200 rounded-md border border-gray-600/40 backdrop-blur-sm"
+                  itemProp="keywords"
                 >
                   {tech}
                 </span>
@@ -271,6 +371,7 @@ export default function ProjectCard({
                     className="flex items-center space-x-1 text-gray-400 hover:text-white transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-400 rounded"
                     onClick={(e: React.MouseEvent) => e.stopPropagation()}
                     aria-label={`View ${title} source code on GitHub`}
+                    itemProp="codeRepository"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -298,6 +399,7 @@ export default function ProjectCard({
                     className="flex items-center space-x-1 text-gray-400 hover:text-blue-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400 rounded"
                     onClick={(e) => e.stopPropagation()}
                     aria-label={`View ${title} live demo`}
+                    itemProp="url"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"

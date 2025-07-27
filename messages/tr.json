@@ -3,12 +3,12 @@
     "hero": {
       "title": "Merhaba, ben Mehmet",
       "subTitle": "",
-      "roles": "Full-Stack Geliştirici|Yazılım Mühendisi|Web Tasarımcısı|Problem Çözücü|AI/ML Meraklısı|Teknoloji Bağımlısı",
-      "description": "Mehmet Kucak, etkileyici web deneyimleri tasarlamaya odaklanmış bir full-stack geliştiriciyim. React, Next.js ve TypeScript teknolojileriyle estetik ve yüksek performanslı uygulamalar üretiyorum. Haydi birlikte muhteşem projeler geliştirelim."
+      "roles": "Full-Stack Geliştirici|Yazılım Mühendisi|Web Tasarımcısı|Problem Çözücü|AI/ML Meraklısı|Teknoloji Tutkunu",
+      "description": "Ben Mehmet Kucak, etkileyici web deneyimleri oluşturma konusunda tutkulu, Türkiye'den bir full-stack geliştiriciyim. Gerçek problemleri çözen uygulamalar geliştirmek için React, Next.js ve TypeScript ile çalışıyorum."
     },
     "about":{
       "title": "Hakkımda",
-      "content1": "Merhaba, ben Mehmet Kucak. Türkiye'den {age} yaşında bir geliştiriciyim. Yazılıma 12 yaşında Scratch'te oyun yapmaya çalışarak başladım ve bu araştırma oyun motorları, programlama dilleri ve web geliştirme alanında bir yolculuğa dönüştü.",
+      "content1": "Merhaba, ben Mehmet Kucak. Türkiye'den {age} yaşında bir geliştiriciyim. Yazılıma 12 yaşında oyun yapmaya çalışarak başladım ve bu araştırma oyun motorları, programlama dilleri ve web geliştirme alanında bir yolculuğa dönüştü.",
       "content2": "Web geliştirme benim için özeldi çünkü herhangi bir platformda herkes tarafından kullanılabilecek interaktif bir uygulama yaratma fikri bana büyülü geliyordu. Bu fikirle React, TypeScript, Next.js, Node.js ve PostgreSQL gibi teknolojileri öğrenmeye başladım.",
       "content3": "Okul ve üniversite sınavlarına hazırlanırken, Teknofest, First Lego League ve çeşitli programlama yarışmalarına katılma fırsatım oldu. Bu yarışmaların birçoğunda finalist oldum ve ödüller kazandım. Bu deneyimler bana problem çözme, takım çalışması, zaman yönetimi ve daha birçok yetenek öğretti.",
       "content4": "Şu anda üniversiteye hazırlanırken projeler geliştirmeye, becerilerimi geliştirmeye ve yenilerini öğrenmeye devam ediyorum. Bir projeniz firkiniz mi ya da sadece sohbet etmek mi istiyorsunuz? Bana çekinmeden ulaşabilirsiniz. İletişim bilgilerimi aşağıda görebilirsiniz."

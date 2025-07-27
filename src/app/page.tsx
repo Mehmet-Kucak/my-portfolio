@@ -44,37 +44,50 @@ const techStacks = {
     {
       name: "React",
       title: "React",
-      description: "React",
+      description:
+        "A powerful JavaScript library for building dynamic user interfaces with reusable components",
       icon: "/icons/section2/react.svg",
+    },
+    {
+      name: "Next.js",
+      title: "Next.js",
+      description:
+        "Full-stack React framework with server-side rendering, routing, and performance optimizations",
+      icon: "/icons/section2/nextdotjs.svg",
     },
     {
       name: "JavaScript",
       title: "JavaScript",
-      description: "JavaScript",
+      description:
+        "The programming language that powers interactive web experiences and modern applications",
       icon: "/icons/section2/javascript.svg",
     },
     {
       name: "TypeScript",
       title: "TypeScript",
-      description: "TypeScript",
+      description:
+        "JavaScript with static type definitions for safer, more maintainable code",
       icon: "/icons/section2/typescript.svg",
     },
     {
       name: "HTML5",
       title: "HTML5",
-      description: "HTML5",
+      description:
+        "The latest standard for structuring and presenting content on the web",
       icon: "/icons/section2/html5.svg",
     },
     {
       name: "CSS",
       title: "CSS",
-      description: "CSS",
+      description:
+        "Stylesheet language for creating beautiful, responsive designs and animations",
       icon: "/icons/section2/css.svg",
     },
     {
       name: "Tailwind CSS",
       title: "Tailwind CSS",
-      description: "Tailwind CSS",
+      description:
+        "Utility-first CSS framework for rapid UI development with consistent design systems",
       icon: "/icons/section2/tailwindcss.svg",
     },
   ],
@@ -82,19 +95,29 @@ const techStacks = {
     {
       name: "Node.js",
       title: "Node.js",
-      description: "Node.js",
+      description:
+        "JavaScript runtime for building fast, scalable server-side applications",
       icon: "/icons/section2/nodedotjs.svg",
+    },
+    {
+      name: "Next.js",
+      title: "Next.js",
+      description:
+        "Full-stack framework enabling both frontend and backend development in one platform",
+      icon: "/icons/section2/nextdotjs.svg",
     },
     {
       name: "Express.js",
       title: "Express.js",
-      description: "Express.js",
+      description:
+        "Minimal and flexible Node.js framework for building robust web APIs and applications",
       icon: "/icons/section2/expressdotcom.svg",
     },
     {
       name: "Python",
       title: "Python",
-      description: "Python",
+      description:
+        "Versatile programming language perfect for data processing, automation, and backend services",
       icon: "/icons/section2/python.svg",
     },
   ],
@@ -102,13 +125,15 @@ const techStacks = {
     {
       name: "PostgreSQL",
       title: "PostgreSQL",
-      description: "PostgreSQL",
+      description:
+        "Advanced open-source relational database known for reliability and powerful features",
       icon: "/icons/section2/postgresql.svg",
     },
     {
-      name: "Firebase",
-      title: "Firebase",
-      description: "Firebase",
+      name: "Firestore",
+      title: "Firestore",
+      description:
+        "Google's flexible NoSQL document database with real-time synchronization and offline support",
       icon: "/icons/section2/firebase.svg",
     },
   ],
@@ -116,31 +141,36 @@ const techStacks = {
     {
       name: "Google Cloud",
       title: "Google Cloud",
-      description: "Google Cloud",
+      description:
+        "Comprehensive cloud platform for hosting, computing, and scaling applications globally",
       icon: "/icons/section2/googlecloud.svg",
     },
     {
       name: "Firebase",
       title: "Firebase",
-      description: "Firebase",
+      description:
+        "Complete app development platform with hosting, authentication, and real-time features",
       icon: "/icons/section2/firebase.svg",
     },
     {
       name: "Supabase",
       title: "Supabase",
-      description: "Supabase",
+      description:
+        "Open-source Firebase alternative with PostgreSQL, real-time subscriptions, and auth",
       icon: "/icons/section2/supabase.svg",
     },
     {
       name: "Vercel",
       title: "Vercel",
-      description: "Vercel",
+      description:
+        "Frontend cloud platform optimized for Next.js with instant deployments and edge functions",
       icon: "/icons/section2/vercel.svg",
     },
     {
       name: "Git",
       title: "Git",
-      description: "Git",
+      description:
+        "Industry-standard version control system for tracking code changes and collaboration",
       icon: "/icons/section2/git.svg",
     },
   ],

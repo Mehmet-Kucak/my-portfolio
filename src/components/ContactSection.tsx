@@ -13,6 +13,8 @@ const ContactSection = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<string | null>(null);
+  const [copyButton1, setCopyButton1] = useState<string | null>(null);
+  const [copyButton2, setCopyButton2] = useState<string | null>(null);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -49,12 +51,30 @@ const ContactSection = () => {
     }, 3000);
   };
 
-  const handleCopy = async (text: string) => {
+  const handleCopy = async (text: string, id: number) => {
     try {
       await navigator.clipboard.writeText(text);
+      if (id === 1) {
+        setCopyButton1("success");
+      } else {
+        setCopyButton2("success");
+      }
     } catch (err) {
       console.error("Copy failed", err);
+      if (id === 1) {
+        setCopyButton1("error");
+      } else {
+        setCopyButton2("error");
+      }
     }
+
+    setTimeout(() => {
+      if (id === 1) {
+        setCopyButton1(null);
+      } else {
+        setCopyButton2(null);
+      }
+    }, 3000);
   };
 
   const socialLinks = [
@@ -131,7 +151,7 @@ const ContactSection = () => {
   return (
     <>
       {/* Animated Background */}
-      <div className="absolute inset-0 overflow-hidden">
+      <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
         <div className="absolute inset-0 bg-gradient-to-tr from-gray-900 via-black to-gray-900" />
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl" />
@@ -158,6 +178,7 @@ const ContactSection = () => {
                 className="cursor-pointer size-12 p-2 flex items-center justify-center bg-gray-800/50 rounded-xl border border-gray-600/30 text-gray-300"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
+                aria-label="Send email to mehmetkucak07@gmail.com"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -182,28 +203,76 @@ const ContactSection = () => {
               </div>
               <motion.button
                 onClick={() => {
-                  handleCopy("mehmetkucak07@gmail.com");
+                  handleCopy("mehmetkucak07@gmail.com", 1);
                 }}
                 className="cursor-pointer size-12 p-2 ml-auto flex items-center justify-center bg-gray-800/50 rounded-xl border border-gray-600/30 text-gray-300"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
+                aria-label="Copy email address to clipboard"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width={24}
-                  height={24}
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="w-full h-full"
-                >
-                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                  <path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" />
-                  <path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" />
-                </svg>
+                {copyButton1 === null && (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width={24}
+                    height={24}
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="w-full h-full"
+                  >
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" />
+                    <path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" />
+                  </svg>
+                )}
+                {copyButton1 === "success" && (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width={24}
+                    height={24}
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="oklch(72.3% 0.219 149.579)"
+                    strokeWidth={2}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="w-full h-full"
+                  >
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M10 20.777a8.942 8.942 0 0 1 -2.48 -.969" />
+                    <path d="M14 3.223a9.003 9.003 0 0 1 0 17.554" />
+                    <path d="M4.579 17.093a8.961 8.961 0 0 1 -1.227 -2.592" />
+                    <path d="M3.124 10.5c.16 -.95 .468 -1.85 .9 -2.675l.169 -.305" />
+                    <path d="M6.907 4.579a8.954 8.954 0 0 1 3.093 -1.356" />
+                    <path d="M9 12l2 2l4 -4" />
+                  </svg>
+                )}
+                {copyButton1 === "error" && (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width={24}
+                    height={24}
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="oklch(63.7% 0.237 25.331)"
+                    strokeWidth={2}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="w-full h-full"
+                  >
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M10 20.777a8.942 8.942 0 0 1 -2.48 -.969" />
+                    <path d="M14 3.223a9.003 9.003 0 0 1 0 17.554" />
+                    <path d="M4.579 17.093a8.961 8.961 0 0 1 -1.227 -2.592" />
+                    <path d="M3.124 10.5c.16 -.95 .468 -1.85 .9 -2.675l.169 -.305" />
+                    <path d="M6.907 4.579a8.954 8.954 0 0 1 3.093 -1.356" />
+                    <path d="M14 14l-4 -4" />
+                    <path d="M10 14l4 -4" />
+                  </svg>
+                )}
               </motion.button>
             </div>
 
@@ -214,6 +283,7 @@ const ContactSection = () => {
                 className="cursor-pointer size-12 p-2 flex items-center justify-center bg-gray-800/50 rounded-xl border border-gray-600/30 text-gray-300"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
+                aria-label="View location on Google Maps"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -241,35 +311,87 @@ const ContactSection = () => {
               </div>
               <motion.button
                 onClick={() => {
-                  handleCopy("https://maps.app.goo.gl/ZGfTmiA6sbczcETaA");
+                  handleCopy("https://maps.app.goo.gl/ZGfTmiA6sbczcETaA", 2);
                 }}
                 className="cursor-pointer size-12 p-2 ml-auto flex items-center justify-center bg-gray-800/50 rounded-xl border border-gray-600/30 text-gray-300"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
+                aria-label="Copy location to clipboard"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width={24}
-                  height={24}
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="w-full h-full"
-                >
-                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                  <path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" />
-                  <path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" />
-                </svg>
+                {copyButton2 === null && (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width={24}
+                    height={24}
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="w-full h-full"
+                  >
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" />
+                    <path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" />
+                  </svg>
+                )}
+                {copyButton2 === "success" && (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width={24}
+                    height={24}
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="oklch(72.3% 0.219 149.579)"
+                    strokeWidth={2}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="w-full h-full"
+                  >
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M10 20.777a8.942 8.942 0 0 1 -2.48 -.969" />
+                    <path d="M14 3.223a9.003 9.003 0 0 1 0 17.554" />
+                    <path d="M4.579 17.093a8.961 8.961 0 0 1 -1.227 -2.592" />
+                    <path d="M3.124 10.5c.16 -.95 .468 -1.85 .9 -2.675l.169 -.305" />
+                    <path d="M6.907 4.579a8.954 8.954 0 0 1 3.093 -1.356" />
+                    <path d="M9 12l2 2l4 -4" />
+                  </svg>
+                )}
+                {copyButton2 === "error" && (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width={24}
+                    height={24}
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="oklch(63.7% 0.237 25.331)"
+                    strokeWidth={2}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="w-full h-full"
+                  >
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M10 20.777a8.942 8.942 0 0 1 -2.48 -.969" />
+                    <path d="M14 3.223a9.003 9.003 0 0 1 0 17.554" />
+                    <path d="M4.579 17.093a8.961 8.961 0 0 1 -1.227 -2.592" />
+                    <path d="M3.124 10.5c.16 -.95 .468 -1.85 .9 -2.675l.169 -.305" />
+                    <path d="M6.907 4.579a8.954 8.954 0 0 1 3.093 -1.356" />
+                    <path d="M14 14l-4 -4" />
+                    <path d="M10 14l4 -4" />
+                  </svg>
+                )}
               </motion.button>
             </div>
 
             <h4 className="text-base font-regular text-white mt-auto">
               {t("contact.info.socials")}
             </h4>
-            <div className="w-full h-fit flex space-x-4">
+            <div
+              className="w-full h-fit flex space-x-4"
+              role="list"
+              aria-label="Social media links"
+            >
               {socialLinks.map((social) => (
                 <motion.a
                   key={social.name}
@@ -277,6 +399,9 @@ const ContactSection = () => {
                   target="_blank"
                   className={`size-12 p-2 flex items-center justify-center bg-gray-800/50 rounded-xl border border-gray-600/30 text-gray-300`}
                   whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  aria-label={`Visit ${social.name} profile`}
+                  role="listitem"
                 >
                   {social.icon}
                   <span className="sr-only">{social.name}</span>
@@ -291,7 +416,7 @@ const ContactSection = () => {
               {t("contact.send.title")}
             </h3>
 
-            <form onSubmit={handleSubmit} className="space-y-2">
+            <form onSubmit={handleSubmit} className="space-y-2" noValidate>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label
@@ -474,6 +599,8 @@ const ContactSection = () => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   className="w-full flex justify-center items-center gap-2 py-3 px-6 bg-green-500/20 border border-green-500/30 rounded-xl text-xl text-green-300 focus:outline-none transition-all duration-200"
+                  role="status"
+                  aria-live="polite"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -503,6 +630,8 @@ const ContactSection = () => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   className="w-full flex justify-center items-center gap-2 py-3 px-6 bg-red-500/20 border border-red-500/30 rounded-xl text-xl text-red-300 focus:outline-none transition-all duration-200"
+                  role="alert"
+                  aria-live="assertive"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

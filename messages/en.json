@@ -30,7 +30,7 @@
         "title": "Reddit Clone App",
         "description":
           "A dynamic community platform where users create and join topic-based communities with real-time updates. Features user authentication, instant content synchronization, and clean RESTful routing for communities, posts, and profiles.",
-        "image": "projects/redditclone.webp",
+        "image": "/projects/redditclone.webp",
         "technologies": 
           "Next.js|React|TypeScript|Tailwind CSS|Supabase|Supabase Auth",
         "githubUrl": "https://github.com/Mehmet-Kucak/reddit_clone",
@@ -40,7 +40,7 @@
         "title": "Turkish Local Cuisines Mobile App",
         "description":
           "An AI-powered culinary discovery app that introduces travelers to authentic Turkish regional foods. Uses location detection, OpenAI integration for cuisine descriptions, and Google Maps API to find nearby restaurants with reviews and ratings.",
-        "image": "projects/gastrokesif.webp",
+        "image": "/projects/gastrokesif.webp",
         "technologies": "Next.js|React|Firebase|Google Maps API|OpenAI API|Python|Puppeteer",
         "githubUrl": "https://github.com/Mehmet-Kucak/yemekci",
         "liveUrl": "https://gastrokesif.vercel.app/en/"
@@ -49,7 +49,7 @@
         "title": "Personal Portfolio",
         "description":
           "A modern, bilingual portfolio website featuring interactive animations and mobile-optimized design. Built with performance optimization techniques including lazy loading, intersection observers, and efficient state management.",
-        "image": "projects/portfolio.webp",
+        "image": "/projects/portfolio.webp",
         "technologies": "Next.js|React|TypeScript|Tailwind CSS|Framer Motion|Next-intl",
         "githubUrl": "https://github.com/Mehmet-Kucak/my-portfolio",
         "liveUrl": "https://mehmetkucak.com"
@@ -58,7 +58,7 @@
         "title": "Conway's Game of Life",
         "description":
           "An interactive implementation of Conway's Game of Life cellular automaton. Features real-time simulation with adjustable speed controls, mouse-based cell drawing and step-by-step execution.",
-        "image": "projects/gameoflife.webp",
+        "image": "/projects/gameoflife.webp",
         "technologies": "Next.js|React|TypeScript",
         "githubUrl": "https://github.com/Mehmet-Kucak/game-of-life",
         "liveUrl": "https://game-of-life0.vercel.app/"

@@ -117,7 +117,6 @@ export function AnimatedGridBg() {
       canvas.width = rect.width;
       canvas.height = rect.height;
 
-      // Set initial mouse position to center
       mouseRef.current = {
         x: rect.width / 2,
         y: rect.height / 2,
@@ -160,6 +159,8 @@ export function AnimatedGridBg() {
         ref={canvasRef}
         className="absolute inset-0 pointer-events-none"
         style={{ background: "transparent" }}
+        role="presentation"
+        aria-hidden="true"
       />
     </div>
   );
@@ -258,7 +259,6 @@ export function AnimatedIconBg({
     };
   }, []);
 
-  // Canvas dimensions setup with debouncing
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -271,11 +271,9 @@ export function AnimatedIconBg({
         canvas.width = canvas.clientWidth;
         canvas.height = canvas.clientHeight;
 
-        // Reinitialize icons if they exist and canvas size changed significantly
         if (iconsRef.current.length > 0) {
           const { width, height } = canvas;
           iconsRef.current.forEach((icon) => {
-            // Keep icons within new bounds
             icon.x = Math.min(icon.x, width - icon.size);
             icon.y = Math.min(icon.y, height - icon.size);
           });
@@ -292,7 +290,6 @@ export function AnimatedIconBg({
     };
   }, []);
 
-  // Animation loop with visibility control
   const animate = useCallback(
     (now: number) => {
       const canvas = canvasRef.current;
@@ -307,7 +304,6 @@ export function AnimatedIconBg({
       const dt = now - lastTimeRef.current;
       lastTimeRef.current = now;
 
-      // Limit frame rate to 60fps and skip frames if dt is too small
       if (dt < 16) {
         animationIdRef.current = requestAnimationFrame(animate);
         return;
@@ -315,20 +311,16 @@ export function AnimatedIconBg({
 
       const { width, height } = canvas;
 
-      // Use faster clearing method
       ctx.clearRect(0, 0, width, height);
 
-      // Batch canvas operations for better performance
       ctx.globalAlpha = 0.6;
       ctx.filter = iconFilter;
 
       for (const icon of iconsRef.current) {
-        // Update position and rotation
         icon.x += icon.vx * dt;
         icon.y += icon.vy * dt;
         icon.rotation += icon.rotSpeed * dt;
 
-        // Boundary collision with more efficient checks
         if (icon.x <= 0 || icon.x + icon.size >= width) {
           icon.x = Math.max(0, Math.min(width - icon.size, icon.x));
           icon.vx *= -1;
@@ -339,7 +331,6 @@ export function AnimatedIconBg({
           icon.vy *= -1;
         }
 
-        // Draw with minimal state changes
         ctx.save();
         ctx.translate(icon.x + icon.size / 2, icon.y + icon.size / 2);
         ctx.rotate(icon.rotation);
@@ -358,7 +349,6 @@ export function AnimatedIconBg({
     [isVisible, isLoaded, iconFilter]
   );
 
-  // Icon loading and initialization
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -416,7 +406,6 @@ export function AnimatedIconBg({
       });
   }, [iconType, iconCount, speed, size, rotationSpeed]);
 
-  // Start/stop animation based on visibility and loading state
   useEffect(() => {
     if (isVisible && isLoaded) {
       lastTimeRef.current = performance.now();
@@ -434,7 +423,6 @@ export function AnimatedIconBg({
     };
   }, [isVisible, isLoaded, animate]);
 
-  // Cleanup on unmount
   useEffect(() => {
     return () => {
       if (animationIdRef.current) {
@@ -452,7 +440,6 @@ export function AnimatedIconBg({
         height: "100%",
         contain: "layout style paint",
       }}
-      // Add accessibility
       role="presentation"
       aria-hidden="true"
     />

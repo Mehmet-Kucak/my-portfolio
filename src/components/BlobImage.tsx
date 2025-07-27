@@ -55,10 +55,10 @@ export default function Blob({
       aria-label={alt}
       className="w-full h-full max-w-md will-change-transform"
       whileHover={{
-        scale: 1.05,
+        scale: 1.02,
         transition: { duration: 0.2 },
       }}
-      whileTap={{ scale: 0.95, transition: { duration: 0.2 } }}
+      whileTap={{ scale: 0.98, transition: { duration: 0.2 } }}
     >
       <defs>
         <filter id="blob-shadow" x="-50%" y="-50%" width="200%" height="200%">
@@ -75,10 +75,10 @@ export default function Blob({
             initial={{ d: shapes[0] }}
             animate={{ d: shapes }}
             transition={{
-              duration: shapes.length,
+              duration: shapes.length * 3,
               repeat: Infinity,
               repeatType: "loop",
-              ease: "linear",
+              ease: "easeInOut",
             }}
             fill="none"
             stroke="none"
@@ -101,10 +101,10 @@ export default function Blob({
         initial={{ d: shapes[0] }}
         animate={{ d: shapes }}
         transition={{
-          duration: shapes.length,
+          duration: shapes.length * 3,
           repeat: Infinity,
           repeatType: "loop",
-          ease: "linear",
+          ease: "easeInOut",
         }}
         fill="none"
         stroke={outline.color}
